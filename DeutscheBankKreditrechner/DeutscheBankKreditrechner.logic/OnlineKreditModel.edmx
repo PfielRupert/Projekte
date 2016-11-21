@@ -1,0 +1,1121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="OnlineKreditModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="tblAbschluss">
+          <Key>
+            <PropertyRef Name="ID_Abschluss" />
+          </Key>
+          <Property Name="ID_Abschluss" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Abschluss" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblArbeitgeber">
+          <Key>
+            <PropertyRef Name="ID_Arbeitgeber" />
+          </Key>
+          <Property Name="ID_Arbeitgeber" Type="int" Nullable="false" />
+          <Property Name="Firma" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="BeschaeftigtSeitMonaten" Type="int" />
+          <Property Name="FKBeschaeftigungsArt" Type="int" Nullable="false" />
+          <Property Name="FKBranche" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblBeschaeftigungsArt">
+          <Key>
+            <PropertyRef Name="ID_BeschaeftigungsArt" />
+          </Key>
+          <Property Name="ID_BeschaeftigungsArt" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Beschaeftigungsart" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblBranche">
+          <Key>
+            <PropertyRef Name="ID_Branche" />
+          </Key>
+          <Property Name="ID_Branche" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Branche" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblFamilienstand">
+          <Key>
+            <PropertyRef Name="ID_Familienstand" />
+          </Key>
+          <Property Name="ID_Familienstand" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Familienstand" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblFinanzielleSituation">
+          <Key>
+            <PropertyRef Name="ID_FinanzielleSituation" />
+          </Key>
+          <Property Name="ID_FinanzielleSituation" Type="int" Nullable="false" />
+          <Property Name="NettoEinkommenJährlich" Type="float" Nullable="false" />
+          <Property Name="WohnkostenMonatlich" Type="float" />
+          <Property Name="EinkuenfteAlimente" Type="float" />
+          <Property Name="Unterhaltszahlungen" Type="float" />
+          <Property Name="SonstigeAusgabenMonatlich" Type="float" />
+          <Property Name="SonstigeEinnahmenMonatlich" Type="float" />
+          <Property Name="BestehendeRatenVerpflichtungen" Type="float" />
+        </EntityType>
+        <EntityType Name="tblGeschlecht">
+          <Key>
+            <PropertyRef Name="ID_Geschlecht" />
+          </Key>
+          <Property Name="ID_Geschlecht" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="GeschlechtLong" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="GeschlechtShort" Type="char" MaxLength="1" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblIdentifikationsArt">
+          <Key>
+            <PropertyRef Name="ID_IdentitifaktionsArt" />
+          </Key>
+          <Property Name="ID_IdentitifaktionsArt" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdentitfikationsArt" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblKontaktdaten">
+          <Key>
+            <PropertyRef Name="ID_Kontaktdaten" />
+          </Key>
+          <Property Name="ID_Kontaktdaten" Type="int" Nullable="false" />
+          <Property Name="Strasse" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Hausnummer" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="Stiege" Type="varchar" MaxLength="10" />
+          <Property Name="Etage" Type="varchar" MaxLength="10" />
+          <Property Name="Türnummer" Type="varchar" MaxLength="10" />
+          <Property Name="email" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Tel" Type="varchar" MaxLength="50" />
+          <Property Name="FKOrt" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblKontoDaten">
+          <Key>
+            <PropertyRef Name="ID_KontoDaten" />
+          </Key>
+          <Property Name="ID_KontoDaten" Type="int" Nullable="false" />
+          <Property Name="IBAN" Type="varchar" MaxLength="20" />
+          <Property Name="BIC" Type="varchar" MaxLength="8" />
+          <Property Name="HatKonto" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblKreditdaten">
+          <Key>
+            <PropertyRef Name="ID_Kredit" />
+          </Key>
+          <Property Name="ID_Kredit" Type="int" Nullable="false" />
+          <Property Name="Laufzeit" Type="int" Nullable="false" />
+          <Property Name="GesamtBetrag" Type="float" Nullable="false" />
+          <Property Name="Kreditrate" Type="float" Nullable="false" />
+          <Property Name="istBewilligt" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblLand">
+          <Key>
+            <PropertyRef Name="ID_Land" />
+          </Key>
+          <Property Name="ID_Land" Type="char" MaxLength="3" Nullable="false" />
+          <Property Name="Land" Type="varchar" MaxLength="75" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblOrt">
+          <Key>
+            <PropertyRef Name="ID_Ort" />
+          </Key>
+          <Property Name="ID_Ort" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Ort" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="PLZ" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="FKLand" Type="char" MaxLength="3" />
+        </EntityType>
+        <EntityType Name="tblPersoenlicheDaten">
+          <Key>
+            <PropertyRef Name="ID_PersoenlicheDaten" />
+          </Key>
+          <Property Name="ID_PersoenlicheDaten" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Vorname" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Nachname" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="UHPKinder" Type="int" />
+          <Property Name="GeburtsDatum" Type="date" Nullable="false" />
+          <Property Name="FKGeschlecht" Type="int" Nullable="false" />
+          <Property Name="FKTitel" Type="int" />
+          <Property Name="FKStaatsbuegerschaft" Type="char" MaxLength="3" Nullable="false" />
+          <Property Name="FKFamilienstand" Type="int" Nullable="false" />
+          <Property Name="FKWohnart" Type="int" Nullable="false" />
+          <Property Name="FKAbschluss" Type="int" Nullable="false" />
+          <Property Name="FkIdentifikationsArt" Type="int" Nullable="false" />
+          <Property Name="Identifikationsnummer" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblSettings">
+          <Key>
+            <PropertyRef Name="ID_Settings" />
+          </Key>
+          <Property Name="ID_Settings" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FixZins" Type="float" Nullable="false" />
+          <Property Name="VariablerZins" Type="float" Nullable="false" />
+          <Property Name="MaxLaufzeit" Type="int" Nullable="false" />
+          <Property Name="MinLautzeit" Type="int" Nullable="false" />
+          <Property Name="MaxKreditBetrag" Type="int" Nullable="false" />
+          <Property Name="MinKreditBetreg" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblTitel">
+          <Key>
+            <PropertyRef Name="ID_Titel" />
+          </Key>
+          <Property Name="ID_Titel" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Titel" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblWohnart">
+          <Key>
+            <PropertyRef Name="ID_Wohnart" />
+          </Key>
+          <Property Name="ID_Wohnart" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Wohnart" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__tblArbeit__FKBes__3B75D760">
+          <End Role="tblBeschaeftigungsArt" Type="Self.tblBeschaeftigungsArt" Multiplicity="1" />
+          <End Role="tblArbeitgeber" Type="Self.tblArbeitgeber" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblBeschaeftigungsArt">
+              <PropertyRef Name="ID_BeschaeftigungsArt" />
+            </Principal>
+            <Dependent Role="tblArbeitgeber">
+              <PropertyRef Name="FKBeschaeftigungsArt" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblArbeit__FKBra__3C69FB99">
+          <End Role="tblBranche" Type="Self.tblBranche" Multiplicity="1" />
+          <End Role="tblArbeitgeber" Type="Self.tblArbeitgeber" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblBranche">
+              <PropertyRef Name="ID_Branche" />
+            </Principal>
+            <Dependent Role="tblArbeitgeber">
+              <PropertyRef Name="FKBranche" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblArbeit__ID_Ar__3A81B327">
+          <End Role="tblPersoenlicheDaten" Type="Self.tblPersoenlicheDaten" Multiplicity="1" />
+          <End Role="tblArbeitgeber" Type="Self.tblArbeitgeber" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="tblPersoenlicheDaten">
+              <PropertyRef Name="ID_PersoenlicheDaten" />
+            </Principal>
+            <Dependent Role="tblArbeitgeber">
+              <PropertyRef Name="ID_Arbeitgeber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblFinanz__ID_Fi__37A5467C">
+          <End Role="tblPersoenlicheDaten" Type="Self.tblPersoenlicheDaten" Multiplicity="1" />
+          <End Role="tblFinanzielleSituation" Type="Self.tblFinanzielleSituation" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="tblPersoenlicheDaten">
+              <PropertyRef Name="ID_PersoenlicheDaten" />
+            </Principal>
+            <Dependent Role="tblFinanzielleSituation">
+              <PropertyRef Name="ID_FinanzielleSituation" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblKontak__FKOrt__403A8C7D">
+          <End Role="tblOrt" Type="Self.tblOrt" Multiplicity="1" />
+          <End Role="tblKontaktdaten" Type="Self.tblKontaktdaten" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblOrt">
+              <PropertyRef Name="ID_Ort" />
+            </Principal>
+            <Dependent Role="tblKontaktdaten">
+              <PropertyRef Name="FKOrt" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblKontak__ID_Ko__3F466844">
+          <End Role="tblPersoenlicheDaten" Type="Self.tblPersoenlicheDaten" Multiplicity="1" />
+          <End Role="tblKontaktdaten" Type="Self.tblKontaktdaten" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="tblPersoenlicheDaten">
+              <PropertyRef Name="ID_PersoenlicheDaten" />
+            </Principal>
+            <Dependent Role="tblKontaktdaten">
+              <PropertyRef Name="ID_Kontaktdaten" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblKontoD__ID_Ko__4316F928">
+          <End Role="tblPersoenlicheDaten" Type="Self.tblPersoenlicheDaten" Multiplicity="1" />
+          <End Role="tblKontoDaten" Type="Self.tblKontoDaten" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="tblPersoenlicheDaten">
+              <PropertyRef Name="ID_PersoenlicheDaten" />
+            </Principal>
+            <Dependent Role="tblKontoDaten">
+              <PropertyRef Name="ID_KontoDaten" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblKredit__ID_Kr__45F365D3">
+          <End Role="tblPersoenlicheDaten" Type="Self.tblPersoenlicheDaten" Multiplicity="1" />
+          <End Role="tblKreditdaten" Type="Self.tblKreditdaten" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="tblPersoenlicheDaten">
+              <PropertyRef Name="ID_PersoenlicheDaten" />
+            </Principal>
+            <Dependent Role="tblKreditdaten">
+              <PropertyRef Name="ID_Kredit" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblOrt__FKLand__25869641">
+          <End Role="tblLand" Type="Self.tblLand" Multiplicity="0..1" />
+          <End Role="tblOrt" Type="Self.tblOrt" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblLand">
+              <PropertyRef Name="ID_Land" />
+            </Principal>
+            <Dependent Role="tblOrt">
+              <PropertyRef Name="FKLand" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblPersoe__FKAbs__33D4B598">
+          <End Role="tblAbschluss" Type="Self.tblAbschluss" Multiplicity="1" />
+          <End Role="tblPersoenlicheDaten" Type="Self.tblPersoenlicheDaten" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblAbschluss">
+              <PropertyRef Name="ID_Abschluss" />
+            </Principal>
+            <Dependent Role="tblPersoenlicheDaten">
+              <PropertyRef Name="FKAbschluss" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblPersoe__FKFam__31EC6D26">
+          <End Role="tblFamilienstand" Type="Self.tblFamilienstand" Multiplicity="1" />
+          <End Role="tblPersoenlicheDaten" Type="Self.tblPersoenlicheDaten" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblFamilienstand">
+              <PropertyRef Name="ID_Familienstand" />
+            </Principal>
+            <Dependent Role="tblPersoenlicheDaten">
+              <PropertyRef Name="FKFamilienstand" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblPersoe__FKGes__2F10007B">
+          <End Role="tblGeschlecht" Type="Self.tblGeschlecht" Multiplicity="1" />
+          <End Role="tblPersoenlicheDaten" Type="Self.tblPersoenlicheDaten" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblGeschlecht">
+              <PropertyRef Name="ID_Geschlecht" />
+            </Principal>
+            <Dependent Role="tblPersoenlicheDaten">
+              <PropertyRef Name="FKGeschlecht" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblPersoe__FkIde__34C8D9D1">
+          <End Role="tblIdentifikationsArt" Type="Self.tblIdentifikationsArt" Multiplicity="1" />
+          <End Role="tblPersoenlicheDaten" Type="Self.tblPersoenlicheDaten" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblIdentifikationsArt">
+              <PropertyRef Name="ID_IdentitifaktionsArt" />
+            </Principal>
+            <Dependent Role="tblPersoenlicheDaten">
+              <PropertyRef Name="FkIdentifikationsArt" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblPersoe__FKSta__30F848ED">
+          <End Role="tblLand" Type="Self.tblLand" Multiplicity="1" />
+          <End Role="tblPersoenlicheDaten" Type="Self.tblPersoenlicheDaten" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblLand">
+              <PropertyRef Name="ID_Land" />
+            </Principal>
+            <Dependent Role="tblPersoenlicheDaten">
+              <PropertyRef Name="FKStaatsbuegerschaft" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblPersoe__FKTit__300424B4">
+          <End Role="tblTitel" Type="Self.tblTitel" Multiplicity="0..1" />
+          <End Role="tblPersoenlicheDaten" Type="Self.tblPersoenlicheDaten" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblTitel">
+              <PropertyRef Name="ID_Titel" />
+            </Principal>
+            <Dependent Role="tblPersoenlicheDaten">
+              <PropertyRef Name="FKTitel" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblPersoe__FKWoh__32E0915F">
+          <End Role="tblWohnart" Type="Self.tblWohnart" Multiplicity="1" />
+          <End Role="tblPersoenlicheDaten" Type="Self.tblPersoenlicheDaten" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblWohnart">
+              <PropertyRef Name="ID_Wohnart" />
+            </Principal>
+            <Dependent Role="tblPersoenlicheDaten">
+              <PropertyRef Name="FKWohnart" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="GeldProKundeVerfuegbar" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="float">
+          <Parameter Name="KundenID" Type="int" Mode="In" />
+        </Function>
+        <EntityContainer Name="OnlineKreditModelStoreContainer">
+          <EntitySet Name="tblAbschluss" EntityType="Self.tblAbschluss" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblArbeitgeber" EntityType="Self.tblArbeitgeber" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblBeschaeftigungsArt" EntityType="Self.tblBeschaeftigungsArt" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblBranche" EntityType="Self.tblBranche" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblFamilienstand" EntityType="Self.tblFamilienstand" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblFinanzielleSituation" EntityType="Self.tblFinanzielleSituation" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblGeschlecht" EntityType="Self.tblGeschlecht" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblIdentifikationsArt" EntityType="Self.tblIdentifikationsArt" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblKontaktdaten" EntityType="Self.tblKontaktdaten" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblKontoDaten" EntityType="Self.tblKontoDaten" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblKreditdaten" EntityType="Self.tblKreditdaten" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblLand" EntityType="Self.tblLand" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblOrt" EntityType="Self.tblOrt" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblPersoenlicheDaten" EntityType="Self.tblPersoenlicheDaten" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblSettings" EntityType="Self.tblSettings" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblTitel" EntityType="Self.tblTitel" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblWohnart" EntityType="Self.tblWohnart" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__tblArbeit__FKBes__3B75D760" Association="Self.FK__tblArbeit__FKBes__3B75D760">
+            <End Role="tblBeschaeftigungsArt" EntitySet="tblBeschaeftigungsArt" />
+            <End Role="tblArbeitgeber" EntitySet="tblArbeitgeber" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblArbeit__FKBra__3C69FB99" Association="Self.FK__tblArbeit__FKBra__3C69FB99">
+            <End Role="tblBranche" EntitySet="tblBranche" />
+            <End Role="tblArbeitgeber" EntitySet="tblArbeitgeber" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblArbeit__ID_Ar__3A81B327" Association="Self.FK__tblArbeit__ID_Ar__3A81B327">
+            <End Role="tblPersoenlicheDaten" EntitySet="tblPersoenlicheDaten" />
+            <End Role="tblArbeitgeber" EntitySet="tblArbeitgeber" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblFinanz__ID_Fi__37A5467C" Association="Self.FK__tblFinanz__ID_Fi__37A5467C">
+            <End Role="tblPersoenlicheDaten" EntitySet="tblPersoenlicheDaten" />
+            <End Role="tblFinanzielleSituation" EntitySet="tblFinanzielleSituation" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblKontak__FKOrt__403A8C7D" Association="Self.FK__tblKontak__FKOrt__403A8C7D">
+            <End Role="tblOrt" EntitySet="tblOrt" />
+            <End Role="tblKontaktdaten" EntitySet="tblKontaktdaten" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblKontak__ID_Ko__3F466844" Association="Self.FK__tblKontak__ID_Ko__3F466844">
+            <End Role="tblPersoenlicheDaten" EntitySet="tblPersoenlicheDaten" />
+            <End Role="tblKontaktdaten" EntitySet="tblKontaktdaten" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblKontoD__ID_Ko__4316F928" Association="Self.FK__tblKontoD__ID_Ko__4316F928">
+            <End Role="tblPersoenlicheDaten" EntitySet="tblPersoenlicheDaten" />
+            <End Role="tblKontoDaten" EntitySet="tblKontoDaten" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblKredit__ID_Kr__45F365D3" Association="Self.FK__tblKredit__ID_Kr__45F365D3">
+            <End Role="tblPersoenlicheDaten" EntitySet="tblPersoenlicheDaten" />
+            <End Role="tblKreditdaten" EntitySet="tblKreditdaten" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblOrt__FKLand__25869641" Association="Self.FK__tblOrt__FKLand__25869641">
+            <End Role="tblLand" EntitySet="tblLand" />
+            <End Role="tblOrt" EntitySet="tblOrt" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblPersoe__FKAbs__33D4B598" Association="Self.FK__tblPersoe__FKAbs__33D4B598">
+            <End Role="tblAbschluss" EntitySet="tblAbschluss" />
+            <End Role="tblPersoenlicheDaten" EntitySet="tblPersoenlicheDaten" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblPersoe__FKFam__31EC6D26" Association="Self.FK__tblPersoe__FKFam__31EC6D26">
+            <End Role="tblFamilienstand" EntitySet="tblFamilienstand" />
+            <End Role="tblPersoenlicheDaten" EntitySet="tblPersoenlicheDaten" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblPersoe__FKGes__2F10007B" Association="Self.FK__tblPersoe__FKGes__2F10007B">
+            <End Role="tblGeschlecht" EntitySet="tblGeschlecht" />
+            <End Role="tblPersoenlicheDaten" EntitySet="tblPersoenlicheDaten" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblPersoe__FkIde__34C8D9D1" Association="Self.FK__tblPersoe__FkIde__34C8D9D1">
+            <End Role="tblIdentifikationsArt" EntitySet="tblIdentifikationsArt" />
+            <End Role="tblPersoenlicheDaten" EntitySet="tblPersoenlicheDaten" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblPersoe__FKSta__30F848ED" Association="Self.FK__tblPersoe__FKSta__30F848ED">
+            <End Role="tblLand" EntitySet="tblLand" />
+            <End Role="tblPersoenlicheDaten" EntitySet="tblPersoenlicheDaten" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblPersoe__FKTit__300424B4" Association="Self.FK__tblPersoe__FKTit__300424B4">
+            <End Role="tblTitel" EntitySet="tblTitel" />
+            <End Role="tblPersoenlicheDaten" EntitySet="tblPersoenlicheDaten" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblPersoe__FKWoh__32E0915F" Association="Self.FK__tblPersoe__FKWoh__32E0915F">
+            <End Role="tblWohnart" EntitySet="tblWohnart" />
+            <End Role="tblPersoenlicheDaten" EntitySet="tblPersoenlicheDaten" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="OnlineKreditModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="tblAbschluss">
+          <Key>
+            <PropertyRef Name="ID_Abschluss" />
+          </Key>
+          <Property Name="ID_Abschluss" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Abschluss" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="tblPersoenlicheDaten" Relationship="Self.FK__tblPersoe__FKAbs__33D4B598" FromRole="tblAbschluss" ToRole="tblPersoenlicheDaten" />
+        </EntityType>
+        <EntityType Name="tblArbeitgeber">
+          <Key>
+            <PropertyRef Name="ID_Arbeitgeber" />
+          </Key>
+          <Property Name="ID_Arbeitgeber" Type="Int32" Nullable="false" />
+          <Property Name="Firma" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="BeschaeftigtSeitMonaten" Type="Int32" />
+          <Property Name="FKBeschaeftigungsArt" Type="Int32" Nullable="false" />
+          <Property Name="FKBranche" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="tblBeschaeftigungsArt" Relationship="Self.FK__tblArbeit__FKBes__3B75D760" FromRole="tblArbeitgeber" ToRole="tblBeschaeftigungsArt" />
+          <NavigationProperty Name="tblBranche" Relationship="Self.FK__tblArbeit__FKBra__3C69FB99" FromRole="tblArbeitgeber" ToRole="tblBranche" />
+          <NavigationProperty Name="tblPersoenlicheDaten" Relationship="Self.FK__tblArbeit__ID_Ar__3A81B327" FromRole="tblArbeitgeber" ToRole="tblPersoenlicheDaten" />
+        </EntityType>
+        <EntityType Name="tblBeschaeftigungsArt">
+          <Key>
+            <PropertyRef Name="ID_BeschaeftigungsArt" />
+          </Key>
+          <Property Name="ID_BeschaeftigungsArt" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Beschaeftigungsart" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="tblArbeitgeber" Relationship="Self.FK__tblArbeit__FKBes__3B75D760" FromRole="tblBeschaeftigungsArt" ToRole="tblArbeitgeber" />
+        </EntityType>
+        <EntityType Name="tblBranche">
+          <Key>
+            <PropertyRef Name="ID_Branche" />
+          </Key>
+          <Property Name="ID_Branche" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Branche" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="tblArbeitgeber" Relationship="Self.FK__tblArbeit__FKBra__3C69FB99" FromRole="tblBranche" ToRole="tblArbeitgeber" />
+        </EntityType>
+        <EntityType Name="tblFamilienstand">
+          <Key>
+            <PropertyRef Name="ID_Familienstand" />
+          </Key>
+          <Property Name="ID_Familienstand" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Familienstand" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="tblPersoenlicheDaten" Relationship="Self.FK__tblPersoe__FKFam__31EC6D26" FromRole="tblFamilienstand" ToRole="tblPersoenlicheDaten" />
+        </EntityType>
+        <EntityType Name="tblFinanzielleSituation">
+          <Key>
+            <PropertyRef Name="ID_FinanzielleSituation" />
+          </Key>
+          <Property Name="ID_FinanzielleSituation" Type="Int32" Nullable="false" />
+          <Property Name="NettoEinkommenJährlich" Type="Double" Nullable="false" />
+          <Property Name="WohnkostenMonatlich" Type="Double" />
+          <Property Name="EinkuenfteAlimente" Type="Double" />
+          <Property Name="Unterhaltszahlungen" Type="Double" />
+          <Property Name="SonstigeAusgabenMonatlich" Type="Double" />
+          <Property Name="SonstigeEinnahmenMonatlich" Type="Double" />
+          <Property Name="BestehendeRatenVerpflichtungen" Type="Double" />
+          <NavigationProperty Name="tblPersoenlicheDaten" Relationship="Self.FK__tblFinanz__ID_Fi__37A5467C" FromRole="tblFinanzielleSituation" ToRole="tblPersoenlicheDaten" />
+        </EntityType>
+        <EntityType Name="tblGeschlecht">
+          <Key>
+            <PropertyRef Name="ID_Geschlecht" />
+          </Key>
+          <Property Name="ID_Geschlecht" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="GeschlechtLong" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="GeschlechtShort" Type="String" MaxLength="1" FixedLength="true" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="tblPersoenlicheDaten" Relationship="Self.FK__tblPersoe__FKGes__2F10007B" FromRole="tblGeschlecht" ToRole="tblPersoenlicheDaten" />
+        </EntityType>
+        <EntityType Name="tblIdentifikationsArt">
+          <Key>
+            <PropertyRef Name="ID_IdentitifaktionsArt" />
+          </Key>
+          <Property Name="ID_IdentitifaktionsArt" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdentitfikationsArt" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="tblPersoenlicheDaten" Relationship="Self.FK__tblPersoe__FkIde__34C8D9D1" FromRole="tblIdentifikationsArt" ToRole="tblPersoenlicheDaten" />
+        </EntityType>
+        <EntityType Name="tblKontaktdaten">
+          <Key>
+            <PropertyRef Name="ID_Kontaktdaten" />
+          </Key>
+          <Property Name="ID_Kontaktdaten" Type="Int32" Nullable="false" />
+          <Property Name="Strasse" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Hausnummer" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Stiege" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Etage" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Türnummer" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Tel" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="FKOrt" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="tblOrt" Relationship="Self.FK__tblKontak__FKOrt__403A8C7D" FromRole="tblKontaktdaten" ToRole="tblOrt" />
+          <NavigationProperty Name="tblPersoenlicheDaten" Relationship="Self.FK__tblKontak__ID_Ko__3F466844" FromRole="tblKontaktdaten" ToRole="tblPersoenlicheDaten" />
+        </EntityType>
+        <EntityType Name="tblKontoDaten">
+          <Key>
+            <PropertyRef Name="ID_KontoDaten" />
+          </Key>
+          <Property Name="ID_KontoDaten" Type="Int32" Nullable="false" />
+          <Property Name="IBAN" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="BIC" Type="String" MaxLength="8" FixedLength="false" Unicode="false" />
+          <Property Name="HatKonto" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="tblPersoenlicheDaten" Relationship="Self.FK__tblKontoD__ID_Ko__4316F928" FromRole="tblKontoDaten" ToRole="tblPersoenlicheDaten" />
+        </EntityType>
+        <EntityType Name="tblKreditdaten">
+          <Key>
+            <PropertyRef Name="ID_Kredit" />
+          </Key>
+          <Property Name="ID_Kredit" Type="Int32" Nullable="false" />
+          <Property Name="Laufzeit" Type="Int32" Nullable="false" />
+          <Property Name="GesamtBetrag" Type="Double" Nullable="false" />
+          <Property Name="Kreditrate" Type="Double" Nullable="false" />
+          <Property Name="istBewilligt" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="tblPersoenlicheDaten" Relationship="Self.FK__tblKredit__ID_Kr__45F365D3" FromRole="tblKreditdaten" ToRole="tblPersoenlicheDaten" />
+        </EntityType>
+        <EntityType Name="tblLand">
+          <Key>
+            <PropertyRef Name="ID_Land" />
+          </Key>
+          <Property Name="ID_Land" Type="String" MaxLength="3" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="Land" Type="String" MaxLength="75" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="tblOrt" Relationship="Self.FK__tblOrt__FKLand__25869641" FromRole="tblLand" ToRole="tblOrt" />
+          <NavigationProperty Name="tblPersoenlicheDaten" Relationship="Self.FK__tblPersoe__FKSta__30F848ED" FromRole="tblLand" ToRole="tblPersoenlicheDaten" />
+        </EntityType>
+        <EntityType Name="tblOrt">
+          <Key>
+            <PropertyRef Name="ID_Ort" />
+          </Key>
+          <Property Name="ID_Ort" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Ort" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="PLZ" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="FKLand" Type="String" MaxLength="3" FixedLength="true" Unicode="false" />
+          <NavigationProperty Name="tblKontaktdaten" Relationship="Self.FK__tblKontak__FKOrt__403A8C7D" FromRole="tblOrt" ToRole="tblKontaktdaten" />
+          <NavigationProperty Name="tblLand" Relationship="Self.FK__tblOrt__FKLand__25869641" FromRole="tblOrt" ToRole="tblLand" />
+        </EntityType>
+        <EntityType Name="tblPersoenlicheDaten">
+          <Key>
+            <PropertyRef Name="ID_PersoenlicheDaten" />
+          </Key>
+          <Property Name="ID_PersoenlicheDaten" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Vorname" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Nachname" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="UHPKinder" Type="Int32" />
+          <Property Name="GeburtsDatum" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="FKGeschlecht" Type="Int32" Nullable="false" />
+          <Property Name="FKTitel" Type="Int32" />
+          <Property Name="FKStaatsbuegerschaft" Type="String" MaxLength="3" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="FKFamilienstand" Type="Int32" Nullable="false" />
+          <Property Name="FKWohnart" Type="Int32" Nullable="false" />
+          <Property Name="FKAbschluss" Type="Int32" Nullable="false" />
+          <Property Name="FkIdentifikationsArt" Type="Int32" Nullable="false" />
+          <Property Name="Identifikationsnummer" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="tblAbschluss" Relationship="Self.FK__tblPersoe__FKAbs__33D4B598" FromRole="tblPersoenlicheDaten" ToRole="tblAbschluss" />
+          <NavigationProperty Name="tblArbeitgeber" Relationship="Self.FK__tblArbeit__ID_Ar__3A81B327" FromRole="tblPersoenlicheDaten" ToRole="tblArbeitgeber" />
+          <NavigationProperty Name="tblFamilienstand" Relationship="Self.FK__tblPersoe__FKFam__31EC6D26" FromRole="tblPersoenlicheDaten" ToRole="tblFamilienstand" />
+          <NavigationProperty Name="tblFinanzielleSituation" Relationship="Self.FK__tblFinanz__ID_Fi__37A5467C" FromRole="tblPersoenlicheDaten" ToRole="tblFinanzielleSituation" />
+          <NavigationProperty Name="tblGeschlecht" Relationship="Self.FK__tblPersoe__FKGes__2F10007B" FromRole="tblPersoenlicheDaten" ToRole="tblGeschlecht" />
+          <NavigationProperty Name="tblIdentifikationsArt" Relationship="Self.FK__tblPersoe__FkIde__34C8D9D1" FromRole="tblPersoenlicheDaten" ToRole="tblIdentifikationsArt" />
+          <NavigationProperty Name="tblKontaktdaten" Relationship="Self.FK__tblKontak__ID_Ko__3F466844" FromRole="tblPersoenlicheDaten" ToRole="tblKontaktdaten" />
+          <NavigationProperty Name="tblKontoDaten" Relationship="Self.FK__tblKontoD__ID_Ko__4316F928" FromRole="tblPersoenlicheDaten" ToRole="tblKontoDaten" />
+          <NavigationProperty Name="tblKreditdaten" Relationship="Self.FK__tblKredit__ID_Kr__45F365D3" FromRole="tblPersoenlicheDaten" ToRole="tblKreditdaten" />
+          <NavigationProperty Name="tblLand" Relationship="Self.FK__tblPersoe__FKSta__30F848ED" FromRole="tblPersoenlicheDaten" ToRole="tblLand" />
+          <NavigationProperty Name="tblTitel" Relationship="Self.FK__tblPersoe__FKTit__300424B4" FromRole="tblPersoenlicheDaten" ToRole="tblTitel" />
+          <NavigationProperty Name="tblWohnart" Relationship="Self.FK__tblPersoe__FKWoh__32E0915F" FromRole="tblPersoenlicheDaten" ToRole="tblWohnart" />
+        </EntityType>
+        <EntityType Name="tblSettings">
+          <Key>
+            <PropertyRef Name="ID_Settings" />
+          </Key>
+          <Property Name="ID_Settings" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FixZins" Type="Double" Nullable="false" />
+          <Property Name="VariablerZins" Type="Double" Nullable="false" />
+          <Property Name="MaxLaufzeit" Type="Int32" Nullable="false" />
+          <Property Name="MinLautzeit" Type="Int32" Nullable="false" />
+          <Property Name="MaxKreditBetrag" Type="Int32" Nullable="false" />
+          <Property Name="MinKreditBetreg" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblTitel">
+          <Key>
+            <PropertyRef Name="ID_Titel" />
+          </Key>
+          <Property Name="ID_Titel" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Titel" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="tblPersoenlicheDaten" Relationship="Self.FK__tblPersoe__FKTit__300424B4" FromRole="tblTitel" ToRole="tblPersoenlicheDaten" />
+        </EntityType>
+        <EntityType Name="tblWohnart">
+          <Key>
+            <PropertyRef Name="ID_Wohnart" />
+          </Key>
+          <Property Name="ID_Wohnart" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Wohnart" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="tblPersoenlicheDaten" Relationship="Self.FK__tblPersoe__FKWoh__32E0915F" FromRole="tblWohnart" ToRole="tblPersoenlicheDaten" />
+        </EntityType>
+        <Association Name="FK__tblPersoe__FKAbs__33D4B598">
+          <End Role="tblAbschluss" Type="Self.tblAbschluss" Multiplicity="1" />
+          <End Role="tblPersoenlicheDaten" Type="Self.tblPersoenlicheDaten" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblAbschluss">
+              <PropertyRef Name="ID_Abschluss" />
+            </Principal>
+            <Dependent Role="tblPersoenlicheDaten">
+              <PropertyRef Name="FKAbschluss" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblArbeit__FKBes__3B75D760">
+          <End Role="tblBeschaeftigungsArt" Type="Self.tblBeschaeftigungsArt" Multiplicity="1" />
+          <End Role="tblArbeitgeber" Type="Self.tblArbeitgeber" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblBeschaeftigungsArt">
+              <PropertyRef Name="ID_BeschaeftigungsArt" />
+            </Principal>
+            <Dependent Role="tblArbeitgeber">
+              <PropertyRef Name="FKBeschaeftigungsArt" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblArbeit__FKBra__3C69FB99">
+          <End Role="tblBranche" Type="Self.tblBranche" Multiplicity="1" />
+          <End Role="tblArbeitgeber" Type="Self.tblArbeitgeber" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblBranche">
+              <PropertyRef Name="ID_Branche" />
+            </Principal>
+            <Dependent Role="tblArbeitgeber">
+              <PropertyRef Name="FKBranche" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblArbeit__ID_Ar__3A81B327">
+          <End Role="tblPersoenlicheDaten" Type="Self.tblPersoenlicheDaten" Multiplicity="1" />
+          <End Role="tblArbeitgeber" Type="Self.tblArbeitgeber" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="tblPersoenlicheDaten">
+              <PropertyRef Name="ID_PersoenlicheDaten" />
+            </Principal>
+            <Dependent Role="tblArbeitgeber">
+              <PropertyRef Name="ID_Arbeitgeber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblPersoe__FKFam__31EC6D26">
+          <End Role="tblFamilienstand" Type="Self.tblFamilienstand" Multiplicity="1" />
+          <End Role="tblPersoenlicheDaten" Type="Self.tblPersoenlicheDaten" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblFamilienstand">
+              <PropertyRef Name="ID_Familienstand" />
+            </Principal>
+            <Dependent Role="tblPersoenlicheDaten">
+              <PropertyRef Name="FKFamilienstand" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblFinanz__ID_Fi__37A5467C">
+          <End Role="tblPersoenlicheDaten" Type="Self.tblPersoenlicheDaten" Multiplicity="1" />
+          <End Role="tblFinanzielleSituation" Type="Self.tblFinanzielleSituation" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="tblPersoenlicheDaten">
+              <PropertyRef Name="ID_PersoenlicheDaten" />
+            </Principal>
+            <Dependent Role="tblFinanzielleSituation">
+              <PropertyRef Name="ID_FinanzielleSituation" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblPersoe__FKGes__2F10007B">
+          <End Role="tblGeschlecht" Type="Self.tblGeschlecht" Multiplicity="1" />
+          <End Role="tblPersoenlicheDaten" Type="Self.tblPersoenlicheDaten" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblGeschlecht">
+              <PropertyRef Name="ID_Geschlecht" />
+            </Principal>
+            <Dependent Role="tblPersoenlicheDaten">
+              <PropertyRef Name="FKGeschlecht" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblPersoe__FkIde__34C8D9D1">
+          <End Role="tblIdentifikationsArt" Type="Self.tblIdentifikationsArt" Multiplicity="1" />
+          <End Role="tblPersoenlicheDaten" Type="Self.tblPersoenlicheDaten" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblIdentifikationsArt">
+              <PropertyRef Name="ID_IdentitifaktionsArt" />
+            </Principal>
+            <Dependent Role="tblPersoenlicheDaten">
+              <PropertyRef Name="FkIdentifikationsArt" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblKontak__FKOrt__403A8C7D">
+          <End Role="tblOrt" Type="Self.tblOrt" Multiplicity="1" />
+          <End Role="tblKontaktdaten" Type="Self.tblKontaktdaten" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblOrt">
+              <PropertyRef Name="ID_Ort" />
+            </Principal>
+            <Dependent Role="tblKontaktdaten">
+              <PropertyRef Name="FKOrt" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblKontak__ID_Ko__3F466844">
+          <End Role="tblPersoenlicheDaten" Type="Self.tblPersoenlicheDaten" Multiplicity="1" />
+          <End Role="tblKontaktdaten" Type="Self.tblKontaktdaten" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="tblPersoenlicheDaten">
+              <PropertyRef Name="ID_PersoenlicheDaten" />
+            </Principal>
+            <Dependent Role="tblKontaktdaten">
+              <PropertyRef Name="ID_Kontaktdaten" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblKontoD__ID_Ko__4316F928">
+          <End Role="tblPersoenlicheDaten" Type="Self.tblPersoenlicheDaten" Multiplicity="1" />
+          <End Role="tblKontoDaten" Type="Self.tblKontoDaten" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="tblPersoenlicheDaten">
+              <PropertyRef Name="ID_PersoenlicheDaten" />
+            </Principal>
+            <Dependent Role="tblKontoDaten">
+              <PropertyRef Name="ID_KontoDaten" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblKredit__ID_Kr__45F365D3">
+          <End Role="tblPersoenlicheDaten" Type="Self.tblPersoenlicheDaten" Multiplicity="1" />
+          <End Role="tblKreditdaten" Type="Self.tblKreditdaten" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="tblPersoenlicheDaten">
+              <PropertyRef Name="ID_PersoenlicheDaten" />
+            </Principal>
+            <Dependent Role="tblKreditdaten">
+              <PropertyRef Name="ID_Kredit" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblOrt__FKLand__25869641">
+          <End Role="tblLand" Type="Self.tblLand" Multiplicity="0..1" />
+          <End Role="tblOrt" Type="Self.tblOrt" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblLand">
+              <PropertyRef Name="ID_Land" />
+            </Principal>
+            <Dependent Role="tblOrt">
+              <PropertyRef Name="FKLand" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblPersoe__FKSta__30F848ED">
+          <End Role="tblLand" Type="Self.tblLand" Multiplicity="1" />
+          <End Role="tblPersoenlicheDaten" Type="Self.tblPersoenlicheDaten" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblLand">
+              <PropertyRef Name="ID_Land" />
+            </Principal>
+            <Dependent Role="tblPersoenlicheDaten">
+              <PropertyRef Name="FKStaatsbuegerschaft" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblPersoe__FKTit__300424B4">
+          <End Role="tblTitel" Type="Self.tblTitel" Multiplicity="0..1" />
+          <End Role="tblPersoenlicheDaten" Type="Self.tblPersoenlicheDaten" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblTitel">
+              <PropertyRef Name="ID_Titel" />
+            </Principal>
+            <Dependent Role="tblPersoenlicheDaten">
+              <PropertyRef Name="FKTitel" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblPersoe__FKWoh__32E0915F">
+          <End Role="tblWohnart" Type="Self.tblWohnart" Multiplicity="1" />
+          <End Role="tblPersoenlicheDaten" Type="Self.tblPersoenlicheDaten" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblWohnart">
+              <PropertyRef Name="ID_Wohnart" />
+            </Principal>
+            <Dependent Role="tblPersoenlicheDaten">
+              <PropertyRef Name="FKWohnart" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="dbLapProjektEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="tblAbschluss" EntityType="Self.tblAbschluss" />
+          <EntitySet Name="tblArbeitgeber" EntityType="Self.tblArbeitgeber" />
+          <EntitySet Name="tblBeschaeftigungsArt" EntityType="Self.tblBeschaeftigungsArt" />
+          <EntitySet Name="tblBranche" EntityType="Self.tblBranche" />
+          <EntitySet Name="tblFamilienstand" EntityType="Self.tblFamilienstand" />
+          <EntitySet Name="tblFinanzielleSituation" EntityType="Self.tblFinanzielleSituation" />
+          <EntitySet Name="tblGeschlecht" EntityType="Self.tblGeschlecht" />
+          <EntitySet Name="tblIdentifikationsArt" EntityType="Self.tblIdentifikationsArt" />
+          <EntitySet Name="tblKontaktdaten" EntityType="Self.tblKontaktdaten" />
+          <EntitySet Name="tblKontoDaten" EntityType="Self.tblKontoDaten" />
+          <EntitySet Name="tblKreditdaten" EntityType="Self.tblKreditdaten" />
+          <EntitySet Name="tblLand" EntityType="Self.tblLand" />
+          <EntitySet Name="tblOrt" EntityType="Self.tblOrt" />
+          <EntitySet Name="tblPersoenlicheDaten" EntityType="Self.tblPersoenlicheDaten" />
+          <EntitySet Name="tblSettings" EntityType="Self.tblSettings" />
+          <EntitySet Name="tblTitel" EntityType="Self.tblTitel" />
+          <EntitySet Name="tblWohnart" EntityType="Self.tblWohnart" />
+          <AssociationSet Name="FK__tblPersoe__FKAbs__33D4B598" Association="Self.FK__tblPersoe__FKAbs__33D4B598">
+            <End Role="tblAbschluss" EntitySet="tblAbschluss" />
+            <End Role="tblPersoenlicheDaten" EntitySet="tblPersoenlicheDaten" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblArbeit__FKBes__3B75D760" Association="Self.FK__tblArbeit__FKBes__3B75D760">
+            <End Role="tblBeschaeftigungsArt" EntitySet="tblBeschaeftigungsArt" />
+            <End Role="tblArbeitgeber" EntitySet="tblArbeitgeber" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblArbeit__FKBra__3C69FB99" Association="Self.FK__tblArbeit__FKBra__3C69FB99">
+            <End Role="tblBranche" EntitySet="tblBranche" />
+            <End Role="tblArbeitgeber" EntitySet="tblArbeitgeber" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblArbeit__ID_Ar__3A81B327" Association="Self.FK__tblArbeit__ID_Ar__3A81B327">
+            <End Role="tblPersoenlicheDaten" EntitySet="tblPersoenlicheDaten" />
+            <End Role="tblArbeitgeber" EntitySet="tblArbeitgeber" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblPersoe__FKFam__31EC6D26" Association="Self.FK__tblPersoe__FKFam__31EC6D26">
+            <End Role="tblFamilienstand" EntitySet="tblFamilienstand" />
+            <End Role="tblPersoenlicheDaten" EntitySet="tblPersoenlicheDaten" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblFinanz__ID_Fi__37A5467C" Association="Self.FK__tblFinanz__ID_Fi__37A5467C">
+            <End Role="tblPersoenlicheDaten" EntitySet="tblPersoenlicheDaten" />
+            <End Role="tblFinanzielleSituation" EntitySet="tblFinanzielleSituation" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblPersoe__FKGes__2F10007B" Association="Self.FK__tblPersoe__FKGes__2F10007B">
+            <End Role="tblGeschlecht" EntitySet="tblGeschlecht" />
+            <End Role="tblPersoenlicheDaten" EntitySet="tblPersoenlicheDaten" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblPersoe__FkIde__34C8D9D1" Association="Self.FK__tblPersoe__FkIde__34C8D9D1">
+            <End Role="tblIdentifikationsArt" EntitySet="tblIdentifikationsArt" />
+            <End Role="tblPersoenlicheDaten" EntitySet="tblPersoenlicheDaten" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblKontak__FKOrt__403A8C7D" Association="Self.FK__tblKontak__FKOrt__403A8C7D">
+            <End Role="tblOrt" EntitySet="tblOrt" />
+            <End Role="tblKontaktdaten" EntitySet="tblKontaktdaten" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblKontak__ID_Ko__3F466844" Association="Self.FK__tblKontak__ID_Ko__3F466844">
+            <End Role="tblPersoenlicheDaten" EntitySet="tblPersoenlicheDaten" />
+            <End Role="tblKontaktdaten" EntitySet="tblKontaktdaten" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblKontoD__ID_Ko__4316F928" Association="Self.FK__tblKontoD__ID_Ko__4316F928">
+            <End Role="tblPersoenlicheDaten" EntitySet="tblPersoenlicheDaten" />
+            <End Role="tblKontoDaten" EntitySet="tblKontoDaten" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblKredit__ID_Kr__45F365D3" Association="Self.FK__tblKredit__ID_Kr__45F365D3">
+            <End Role="tblPersoenlicheDaten" EntitySet="tblPersoenlicheDaten" />
+            <End Role="tblKreditdaten" EntitySet="tblKreditdaten" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblOrt__FKLand__25869641" Association="Self.FK__tblOrt__FKLand__25869641">
+            <End Role="tblLand" EntitySet="tblLand" />
+            <End Role="tblOrt" EntitySet="tblOrt" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblPersoe__FKSta__30F848ED" Association="Self.FK__tblPersoe__FKSta__30F848ED">
+            <End Role="tblLand" EntitySet="tblLand" />
+            <End Role="tblPersoenlicheDaten" EntitySet="tblPersoenlicheDaten" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblPersoe__FKTit__300424B4" Association="Self.FK__tblPersoe__FKTit__300424B4">
+            <End Role="tblTitel" EntitySet="tblTitel" />
+            <End Role="tblPersoenlicheDaten" EntitySet="tblPersoenlicheDaten" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblPersoe__FKWoh__32E0915F" Association="Self.FK__tblPersoe__FKWoh__32E0915F">
+            <End Role="tblWohnart" EntitySet="tblWohnart" />
+            <End Role="tblPersoenlicheDaten" EntitySet="tblPersoenlicheDaten" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="OnlineKreditModelStoreContainer" CdmEntityContainer="dbLapProjektEntities">
+          <EntitySetMapping Name="tblAbschluss">
+            <EntityTypeMapping TypeName="OnlineKreditModel.tblAbschluss">
+              <MappingFragment StoreEntitySet="tblAbschluss">
+                <ScalarProperty Name="ID_Abschluss" ColumnName="ID_Abschluss" />
+                <ScalarProperty Name="Abschluss" ColumnName="Abschluss" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblArbeitgeber">
+            <EntityTypeMapping TypeName="OnlineKreditModel.tblArbeitgeber">
+              <MappingFragment StoreEntitySet="tblArbeitgeber">
+                <ScalarProperty Name="ID_Arbeitgeber" ColumnName="ID_Arbeitgeber" />
+                <ScalarProperty Name="Firma" ColumnName="Firma" />
+                <ScalarProperty Name="BeschaeftigtSeitMonaten" ColumnName="BeschaeftigtSeitMonaten" />
+                <ScalarProperty Name="FKBeschaeftigungsArt" ColumnName="FKBeschaeftigungsArt" />
+                <ScalarProperty Name="FKBranche" ColumnName="FKBranche" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblBeschaeftigungsArt">
+            <EntityTypeMapping TypeName="OnlineKreditModel.tblBeschaeftigungsArt">
+              <MappingFragment StoreEntitySet="tblBeschaeftigungsArt">
+                <ScalarProperty Name="ID_BeschaeftigungsArt" ColumnName="ID_BeschaeftigungsArt" />
+                <ScalarProperty Name="Beschaeftigungsart" ColumnName="Beschaeftigungsart" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblBranche">
+            <EntityTypeMapping TypeName="OnlineKreditModel.tblBranche">
+              <MappingFragment StoreEntitySet="tblBranche">
+                <ScalarProperty Name="ID_Branche" ColumnName="ID_Branche" />
+                <ScalarProperty Name="Branche" ColumnName="Branche" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblFamilienstand">
+            <EntityTypeMapping TypeName="OnlineKreditModel.tblFamilienstand">
+              <MappingFragment StoreEntitySet="tblFamilienstand">
+                <ScalarProperty Name="ID_Familienstand" ColumnName="ID_Familienstand" />
+                <ScalarProperty Name="Familienstand" ColumnName="Familienstand" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblFinanzielleSituation">
+            <EntityTypeMapping TypeName="OnlineKreditModel.tblFinanzielleSituation">
+              <MappingFragment StoreEntitySet="tblFinanzielleSituation">
+                <ScalarProperty Name="ID_FinanzielleSituation" ColumnName="ID_FinanzielleSituation" />
+                <ScalarProperty Name="NettoEinkommenJährlich" ColumnName="NettoEinkommenJährlich" />
+                <ScalarProperty Name="WohnkostenMonatlich" ColumnName="WohnkostenMonatlich" />
+                <ScalarProperty Name="EinkuenfteAlimente" ColumnName="EinkuenfteAlimente" />
+                <ScalarProperty Name="Unterhaltszahlungen" ColumnName="Unterhaltszahlungen" />
+                <ScalarProperty Name="SonstigeAusgabenMonatlich" ColumnName="SonstigeAusgabenMonatlich" />
+                <ScalarProperty Name="SonstigeEinnahmenMonatlich" ColumnName="SonstigeEinnahmenMonatlich" />
+                <ScalarProperty Name="BestehendeRatenVerpflichtungen" ColumnName="BestehendeRatenVerpflichtungen" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblGeschlecht">
+            <EntityTypeMapping TypeName="OnlineKreditModel.tblGeschlecht">
+              <MappingFragment StoreEntitySet="tblGeschlecht">
+                <ScalarProperty Name="ID_Geschlecht" ColumnName="ID_Geschlecht" />
+                <ScalarProperty Name="GeschlechtLong" ColumnName="GeschlechtLong" />
+                <ScalarProperty Name="GeschlechtShort" ColumnName="GeschlechtShort" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblIdentifikationsArt">
+            <EntityTypeMapping TypeName="OnlineKreditModel.tblIdentifikationsArt">
+              <MappingFragment StoreEntitySet="tblIdentifikationsArt">
+                <ScalarProperty Name="ID_IdentitifaktionsArt" ColumnName="ID_IdentitifaktionsArt" />
+                <ScalarProperty Name="IdentitfikationsArt" ColumnName="IdentitfikationsArt" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblKontaktdaten">
+            <EntityTypeMapping TypeName="OnlineKreditModel.tblKontaktdaten">
+              <MappingFragment StoreEntitySet="tblKontaktdaten">
+                <ScalarProperty Name="ID_Kontaktdaten" ColumnName="ID_Kontaktdaten" />
+                <ScalarProperty Name="Strasse" ColumnName="Strasse" />
+                <ScalarProperty Name="Hausnummer" ColumnName="Hausnummer" />
+                <ScalarProperty Name="Stiege" ColumnName="Stiege" />
+                <ScalarProperty Name="Etage" ColumnName="Etage" />
+                <ScalarProperty Name="Türnummer" ColumnName="Türnummer" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="Tel" ColumnName="Tel" />
+                <ScalarProperty Name="FKOrt" ColumnName="FKOrt" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblKontoDaten">
+            <EntityTypeMapping TypeName="OnlineKreditModel.tblKontoDaten">
+              <MappingFragment StoreEntitySet="tblKontoDaten">
+                <ScalarProperty Name="ID_KontoDaten" ColumnName="ID_KontoDaten" />
+                <ScalarProperty Name="IBAN" ColumnName="IBAN" />
+                <ScalarProperty Name="BIC" ColumnName="BIC" />
+                <ScalarProperty Name="HatKonto" ColumnName="HatKonto" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblKreditdaten">
+            <EntityTypeMapping TypeName="OnlineKreditModel.tblKreditdaten">
+              <MappingFragment StoreEntitySet="tblKreditdaten">
+                <ScalarProperty Name="ID_Kredit" ColumnName="ID_Kredit" />
+                <ScalarProperty Name="Laufzeit" ColumnName="Laufzeit" />
+                <ScalarProperty Name="GesamtBetrag" ColumnName="GesamtBetrag" />
+                <ScalarProperty Name="Kreditrate" ColumnName="Kreditrate" />
+                <ScalarProperty Name="istBewilligt" ColumnName="istBewilligt" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblLand">
+            <EntityTypeMapping TypeName="OnlineKreditModel.tblLand">
+              <MappingFragment StoreEntitySet="tblLand">
+                <ScalarProperty Name="ID_Land" ColumnName="ID_Land" />
+                <ScalarProperty Name="Land" ColumnName="Land" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblOrt">
+            <EntityTypeMapping TypeName="OnlineKreditModel.tblOrt">
+              <MappingFragment StoreEntitySet="tblOrt">
+                <ScalarProperty Name="ID_Ort" ColumnName="ID_Ort" />
+                <ScalarProperty Name="Ort" ColumnName="Ort" />
+                <ScalarProperty Name="PLZ" ColumnName="PLZ" />
+                <ScalarProperty Name="FKLand" ColumnName="FKLand" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblPersoenlicheDaten">
+            <EntityTypeMapping TypeName="OnlineKreditModel.tblPersoenlicheDaten">
+              <MappingFragment StoreEntitySet="tblPersoenlicheDaten">
+                <ScalarProperty Name="ID_PersoenlicheDaten" ColumnName="ID_PersoenlicheDaten" />
+                <ScalarProperty Name="Vorname" ColumnName="Vorname" />
+                <ScalarProperty Name="Nachname" ColumnName="Nachname" />
+                <ScalarProperty Name="UHPKinder" ColumnName="UHPKinder" />
+                <ScalarProperty Name="GeburtsDatum" ColumnName="GeburtsDatum" />
+                <ScalarProperty Name="FKGeschlecht" ColumnName="FKGeschlecht" />
+                <ScalarProperty Name="FKTitel" ColumnName="FKTitel" />
+                <ScalarProperty Name="FKStaatsbuegerschaft" ColumnName="FKStaatsbuegerschaft" />
+                <ScalarProperty Name="FKFamilienstand" ColumnName="FKFamilienstand" />
+                <ScalarProperty Name="FKWohnart" ColumnName="FKWohnart" />
+                <ScalarProperty Name="FKAbschluss" ColumnName="FKAbschluss" />
+                <ScalarProperty Name="FkIdentifikationsArt" ColumnName="FkIdentifikationsArt" />
+                <ScalarProperty Name="Identifikationsnummer" ColumnName="Identifikationsnummer" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblSettings">
+            <EntityTypeMapping TypeName="OnlineKreditModel.tblSettings">
+              <MappingFragment StoreEntitySet="tblSettings">
+                <ScalarProperty Name="ID_Settings" ColumnName="ID_Settings" />
+                <ScalarProperty Name="FixZins" ColumnName="FixZins" />
+                <ScalarProperty Name="VariablerZins" ColumnName="VariablerZins" />
+                <ScalarProperty Name="MaxLaufzeit" ColumnName="MaxLaufzeit" />
+                <ScalarProperty Name="MinLautzeit" ColumnName="MinLautzeit" />
+                <ScalarProperty Name="MaxKreditBetrag" ColumnName="MaxKreditBetrag" />
+                <ScalarProperty Name="MinKreditBetreg" ColumnName="MinKreditBetreg" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblTitel">
+            <EntityTypeMapping TypeName="OnlineKreditModel.tblTitel">
+              <MappingFragment StoreEntitySet="tblTitel">
+                <ScalarProperty Name="ID_Titel" ColumnName="ID_Titel" />
+                <ScalarProperty Name="Titel" ColumnName="Titel" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblWohnart">
+            <EntityTypeMapping TypeName="OnlineKreditModel.tblWohnart">
+              <MappingFragment StoreEntitySet="tblWohnart">
+                <ScalarProperty Name="ID_Wohnart" ColumnName="ID_Wohnart" />
+                <ScalarProperty Name="Wohnart" ColumnName="Wohnart" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Kein" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
