@@ -532,7 +532,7 @@ namespace DeutscheBankKreditrechner.logic
 
         public static bool KontoinformationenSpeichern(string bankName, string iban, string bic, bool neuesKonto, int idKunde)
         {
-            Debug.WriteLine("KonsumKreditVerwaltung - KontoDatenSpeichern");
+            Debug.WriteLine("KonsumKreditVerwaltung - KontoInformationenSpeichern");
             Debug.Indent();
 
             bool erfolgreich = false;
@@ -547,24 +547,26 @@ namespace DeutscheBankKreditrechner.logic
 
                     if (aktKunde != null)
                     {
-                        tblKontoDaten NeueKontoDaten = new tblKontoDaten()
+                        tblKontoDaten neueKontoDaten = new tblKontoDaten()
                         {
                             BankName = bankName,
                             IBAN = iban,
                             BIC = bic,
-                            NeuesKonto = neuesKonto                         
+                            NeuesKonto = !neuesKonto,
+                            ID_KontoDaten = idKunde
                         };
-                        aktKunde.tblKontoDaten = NeueKontoDaten;
+
+                        context.tblKontoDaten.Add(neueKontoDaten);
                     }
 
                     int anzahlZeilenBetroffen = context.SaveChanges();
                     erfolgreich = anzahlZeilenBetroffen >= 1;
-                    Debug.WriteLine($"{anzahlZeilenBetroffen} KontoDaten gespeichert!");
+                    Debug.WriteLine($"{anzahlZeilenBetroffen} Konto-Daten gespeichert!");
                 }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Fehler in KontoDatenspeichern");
+                Debug.WriteLine("Fehler in KontoInformationenSpeichern");
                 Debug.Indent();
                 Debug.WriteLine(ex.Message);
                 Debug.Unindent();
