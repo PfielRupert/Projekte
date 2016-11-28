@@ -39,6 +39,10 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
     <script src="/Content/js/jquery.flot.animator.min.js" type="text/javascript"></script>
     <!-- //left-chart -->
     <link href="//fonts.googleapis.com/css?family=Muli:300,300i,400,400i" rel="stylesheet">
+    <!-- SLIDER -->
+    <link href="~/Content/css/ion.rangeSlider.css" rel="stylesheet" type="text/css" media="all" />
+    <link href="~/Content/css/ion.rangeSlider.skinHTML5.css" rel="stylesheet" type="text/css" media="all" />
+
     <!-- start-smoth-scrolling -->
     <script type="text/javascript" src="/Content/js/move-top.js"></script>
     <script type="text/javascript" src="/Content/js/easing.js"></script>
@@ -312,8 +316,10 @@ $(document).ready(function(){
 			});
     </script>
     <!-- //here ends scrolling icon -->
-
-    @Scripts.Render("~/bundles/jquery")
+    
+    <!-- Slider JS-->
+    <script src="~/Content/js/ion.rangeSlider.min.js"></script>
+   
     @RenderSection("scripts", required: false)
 </body>
 </html>
