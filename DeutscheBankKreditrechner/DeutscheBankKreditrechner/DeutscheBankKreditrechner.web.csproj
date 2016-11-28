@@ -145,6 +145,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\css\bootstrap-datetimepicker.min.css" />
     <Content Include="Content\css\bootstrap.css" />
     <Content Include="Content\css\chart.min.css" />
     <Content Include="Content\css\flexslider.css" />
@@ -221,6 +222,8 @@
     <Content Include="Content\images\KonsumKreditBanner.jpg" />
     <Content Include="Content\images\logo_ci_graphic.ico" />
     <Content Include="Content\images\logo_ci_graphic.jpg" />
+    <Content Include="Content\js\bootstrap-datetimepicker.min.js" />
+    <Content Include="Content\js\bootstrap-select.js" />
     <Content Include="Content\js\bootstrap.min.js" />
     <Content Include="Content\js\easing.js" />
     <Content Include="Content\js\ion.rangeSlider.js" />
@@ -230,14 +233,18 @@
     <Content Include="Content\js\jqplot.dateAxisRenderer.js" />
     <Content Include="Content\js\jqplot.highlighter.js" />
     <Content Include="Content\js\jqplot.logAxisRenderer.js" />
+    <Content Include="Content\js\jquery-1.11.0.min.js" />
     <Content Include="Content\js\jquery-1.11.1.min.js" />
+    <Content Include="Content\js\jquery-3.1.1.min.js" />
     <Content Include="Content\js\jquery.bootstrap.newsbox.min.js" />
+    <Content Include="Content\js\jquery.chocolat.js" />
     <Content Include="Content\js\jquery.enumerable.js" />
     <Content Include="Content\js\jquery.flexisel.js" />
     <Content Include="Content\js\jquery.flexslider.js" />
     <Content Include="Content\js\jquery.flot.animator.min.js" />
     <Content Include="Content\js\jquery.flot.min.js" />
     <Content Include="Content\js\jquery.glide.js" />
+    <Content Include="Content\js\jquery.hoverdir.js" />
     <Content Include="Content\js\jquery.jqplot.js" />
     <Content Include="Content\js\jquery.magnific-popup.js" />
     <Content Include="Content\js\jquery.marquee.min.js" />
@@ -245,6 +252,8 @@
     <Content Include="Content\js\jquery.simple-dtpicker.js" />
     <Content Include="Content\js\jquery.tufte-graph.js" />
     <Content Include="Content\js\kuma-gauge.jquery.js" />
+    <Content Include="Content\js\modernizr.custom.97074.js" />
+    <Content Include="Content\js\moment-with-locales.min.js" />
     <Content Include="Content\js\move-top.js" />
     <Content Include="Content\js\raphael-min.js" />
     <Content Include="Content\js\raphael.js" />
@@ -290,6 +299,7 @@
     <Content Include="Views\KonsumKredit\PersönlicheDaten.cshtml" />
     <Content Include="Views\KonsumKredit\Arbeitgeber.cshtml" />
     <Content Include="Views\KonsumKredit\Kontoinformationen.cshtml" />
+    <Content Include="Views\KonsumKredit\Zusammenfassung.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
