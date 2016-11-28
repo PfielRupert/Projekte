@@ -92,7 +92,8 @@
           <Property Name="ID_KontoDaten" Type="int" Nullable="false" />
           <Property Name="IBAN" Type="varchar" MaxLength="20" />
           <Property Name="BIC" Type="varchar" MaxLength="8" />
-          <Property Name="HatKonto" Type="bit" Nullable="false" />
+          <Property Name="BankName" Type="varchar" MaxLength="50" />
+          <Property Name="NeuesKonto" Type="bit" />
         </EntityType>
         <EntityType Name="tblKreditdaten">
           <Key>
@@ -655,8 +656,9 @@
           <Property Name="ID_KontoDaten" Type="Int32" Nullable="false" />
           <Property Name="IBAN" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="BIC" Type="String" MaxLength="8" FixedLength="false" Unicode="false" />
-          <Property Name="HatKonto" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="tblPersoenlicheDaten" Relationship="OnlineKreditModel.FK__tblKontoD__ID_Ko__4316F928" FromRole="tblKontoDaten" ToRole="tblPersoenlicheDaten" />
+          <Property Name="BankName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="NeuesKonto" Type="Boolean" />
         </EntityType>
         <EntityType Name="tblKreditdaten">
           <Key>
@@ -1026,7 +1028,8 @@
           <EntitySetMapping Name="tblKontoDaten">
             <EntityTypeMapping TypeName="OnlineKreditModel.tblKontoDaten">
               <MappingFragment StoreEntitySet="tblKontoDaten">
-                <ScalarProperty Name="HatKonto" ColumnName="HatKonto" />
+                <ScalarProperty Name="NeuesKonto" ColumnName="NeuesKonto" />
+                <ScalarProperty Name="BankName" ColumnName="BankName" />
                 <ScalarProperty Name="BIC" ColumnName="BIC" />
                 <ScalarProperty Name="IBAN" ColumnName="IBAN" />
                 <ScalarProperty Name="ID_KontoDaten" ColumnName="ID_KontoDaten" />

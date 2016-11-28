@@ -260,7 +260,12 @@ namespace DeutscheBankKreditrechner.Controllers
         public ActionResult KontoInformationen()
         {
             Debug.WriteLine("GET - KonsumKredit - KontoInformationen");
-            return View();
+
+            KontoInformationenModel model = new KontoInformationenModel()
+            {
+                ID_Kunde = int.Parse(Request.Cookies["idKunde"].Value)
+            };
+            return View(model);
         }
 
         [HttpPost]
@@ -268,6 +273,19 @@ namespace DeutscheBankKreditrechner.Controllers
         public ActionResult KontoInformationen(KontoInformationenModel model)
         {
             Debug.WriteLine("POST - KonsumKredit - KontoInformationen");
+            if (ModelState.IsValid)
+            {
+                /// speichere Daten über BusinessLogic
+                if (KonsumKReditVerwaltung.KontoinformationenSpeichern(
+                                                model.BankName,
+                                                model.BIC,
+                                                model.IBAN,
+                                                model.NeuesKonto,
+                                                model.ID_Kunde))
+                {
+                    return RedirectToAction("Zusammenfassung");
+                }
+            }
             return View();
         }
 

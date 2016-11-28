@@ -529,5 +529,50 @@ namespace DeutscheBankKreditrechner.logic
             Debug.Unindent();
             return erfolgreich;
         }
+
+        public static bool KontoinformationenSpeichern(string bankName, string iban, string bic, bool neuesKonto, int idKunde)
+        {
+            Debug.WriteLine("KonsumKreditVerwaltung - KontoDatenSpeichern");
+            Debug.Indent();
+
+            bool erfolgreich = false;
+
+            try
+            {
+                using (var context = new dbLapProjektEntities())
+                {
+
+                    /// speichere zum Kunden die Angaben
+                    tblPersoenlicheDaten aktKunde = context.tblPersoenlicheDaten.Where(x => x.ID_PersoenlicheDaten == idKunde).FirstOrDefault();
+
+                    if (aktKunde != null)
+                    {
+                        tblKontoDaten NeueKontoDaten = new tblKontoDaten()
+                        {
+                            BankName = bankName,
+                            IBAN = iban,
+                            BIC = bic,
+                            NeuesKonto = neuesKonto                         
+                        };
+                        aktKunde.tblKontoDaten = NeueKontoDaten;
+                    }
+
+                    int anzahlZeilenBetroffen = context.SaveChanges();
+                    erfolgreich = anzahlZeilenBetroffen >= 1;
+                    Debug.WriteLine($"{anzahlZeilenBetroffen} KontoDaten gespeichert!");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Fehler in KontoDatenspeichern");
+                Debug.Indent();
+                Debug.WriteLine(ex.Message);
+                Debug.Unindent();
+                Debugger.Break();
+            }
+
+            Debug.Unindent();
+            return erfolgreich;
+        }
     }
 }

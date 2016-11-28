@@ -17,7 +17,8 @@ namespace DeutscheBankKreditrechner.logic
         public int ID_KontoDaten { get; set; }
         public string IBAN { get; set; }
         public string BIC { get; set; }
-        public bool HatKonto { get; set; }
+        public string BankName { get; set; }
+        public Nullable<bool> NeuesKonto { get; set; }
     
         public virtual tblPersoenlicheDaten tblPersoenlicheDaten { get; set; }
     }
