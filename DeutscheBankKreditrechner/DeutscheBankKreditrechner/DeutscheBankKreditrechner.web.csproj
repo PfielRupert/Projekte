@@ -51,6 +51,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -125,13 +126,32 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\ArbeitgeberModel.cs" />
+    <Compile Include="Models\BeschaeftigungsArtModel.cs" />
+    <Compile Include="Models\BildungsModel.cs" />
+    <Compile Include="Models\BrancheModel.cs" />
+    <Compile Include="Models\FamilienStandModel.cs" />
+    <Compile Include="Models\FinanzielleSituationModel.cs" />
+    <Compile Include="Models\IdentifikationsModel.cs" />
+    <Compile Include="Models\KontaktDatenModel.cs" />
+    <Compile Include="Models\KontoInformationenModel.cs" />
+    <Compile Include="Models\KreditRahmenModel.cs" />
+    <Compile Include="Models\NachschlageFeldModel.cs" />
+    <Compile Include="Models\PersönlicheDatenModel.cs" />
+    <Compile Include="Models\StaatsbuergerschaftsModel.cs" />
+    <Compile Include="Models\TitelModel.cs" />
+    <Compile Include="Models\WohnartModel.cs" />
+    <Compile Include="Models\ZusammenfassungModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\css\bootstrap-datetimepicker.min.css" />
     <Content Include="Content\css\bootstrap.css" />
     <Content Include="Content\css\chart.min.css" />
     <Content Include="Content\css\flexslider.css" />
     <Content Include="Content\css\font-awesome.min.css" />
+    <Content Include="Content\css\ion.rangeSlider.css" />
+    <Content Include="Content\css\ion.rangeSlider.skinHTML5.css" />
     <Content Include="Content\css\jquery.jqplot.css" />
     <Content Include="Content\css\jquery.simple-dtpicker.css" />
     <Content Include="Content\css\popuo-box.css" />
@@ -202,21 +222,29 @@
     <Content Include="Content\images\KonsumKreditBanner.jpg" />
     <Content Include="Content\images\logo_ci_graphic.ico" />
     <Content Include="Content\images\logo_ci_graphic.jpg" />
+    <Content Include="Content\js\bootstrap-datetimepicker.min.js" />
+    <Content Include="Content\js\bootstrap-select.js" />
     <Content Include="Content\js\bootstrap.min.js" />
     <Content Include="Content\js\easing.js" />
+    <Content Include="Content\js\ion.rangeSlider.js" />
+    <Content Include="Content\js\ion.rangeSlider.min.js" />
     <Content Include="Content\js\jqplot.canvasAxisTickRenderer.js" />
     <Content Include="Content\js\jqplot.canvasTextRenderer.js" />
     <Content Include="Content\js\jqplot.dateAxisRenderer.js" />
     <Content Include="Content\js\jqplot.highlighter.js" />
     <Content Include="Content\js\jqplot.logAxisRenderer.js" />
+    <Content Include="Content\js\jquery-1.11.0.min.js" />
     <Content Include="Content\js\jquery-1.11.1.min.js" />
+    <Content Include="Content\js\jquery-3.1.1.min.js" />
     <Content Include="Content\js\jquery.bootstrap.newsbox.min.js" />
+    <Content Include="Content\js\jquery.chocolat.js" />
     <Content Include="Content\js\jquery.enumerable.js" />
     <Content Include="Content\js\jquery.flexisel.js" />
     <Content Include="Content\js\jquery.flexslider.js" />
     <Content Include="Content\js\jquery.flot.animator.min.js" />
     <Content Include="Content\js\jquery.flot.min.js" />
     <Content Include="Content\js\jquery.glide.js" />
+    <Content Include="Content\js\jquery.hoverdir.js" />
     <Content Include="Content\js\jquery.jqplot.js" />
     <Content Include="Content\js\jquery.magnific-popup.js" />
     <Content Include="Content\js\jquery.marquee.min.js" />
@@ -224,6 +252,8 @@
     <Content Include="Content\js\jquery.simple-dtpicker.js" />
     <Content Include="Content\js\jquery.tufte-graph.js" />
     <Content Include="Content\js\kuma-gauge.jquery.js" />
+    <Content Include="Content\js\modernizr.custom.97074.js" />
+    <Content Include="Content\js\moment-with-locales.min.js" />
     <Content Include="Content\js\move-top.js" />
     <Content Include="Content\js\raphael-min.js" />
     <Content Include="Content\js\raphael.js" />
@@ -239,6 +269,8 @@
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff2" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="index.html" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -247,6 +279,8 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\respond.js" />
+    <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -260,15 +294,25 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\KonsumKredit\KreditRahmen.cshtml" />
+    <Content Include="Views\KonsumKredit\FinanzielleSituation.cshtml" />
+    <Content Include="Views\KonsumKredit\PersönlicheDaten.cshtml" />
+    <Content Include="Views\KonsumKredit\Arbeitgeber.cshtml" />
+    <Content Include="Views\KonsumKredit\Kontoinformationen.cshtml" />
+    <Content Include="Views\KonsumKredit\Zusammenfassung.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
-    <Folder Include="Views\KonsumKredit\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DeutscheBankKreditrechner.logic\DeutscheBankKreditrechner.logic.csproj">
+      <Project>{cb552805-39c4-4a11-bcfd-95e0cdd92f16}</Project>
+      <Name>DeutscheBankKreditrechner.logic</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
