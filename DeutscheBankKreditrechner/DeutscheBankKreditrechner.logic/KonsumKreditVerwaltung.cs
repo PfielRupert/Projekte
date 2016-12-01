@@ -576,5 +576,49 @@ namespace DeutscheBankKreditrechner.logic
             Debug.Unindent();
             return erfolgreich;
         }
+        /// Lädt zu einer übergebenen ID alle Informationen zu diesem Kunden aus der DB
+        /// </summary>
+        /// <param name="iKunde">die ID des zu landenden Kunden</param>
+        /// <returns>alle Daten aus der DB zu diesem Kunden</returns>
+        public static tblPersoenlicheDaten KundeLaden(int idKunde)
+        {
+            Debug.WriteLine("KonsumKreditVerwaltung - KundeLaden");
+            Debug.Indent();
+
+            tblPersoenlicheDaten aktuellerKunde = null;
+
+            try
+            {
+                using (var context = new dbLapProjektEntities())
+                {
+                    aktuellerKunde = context.tblPersoenlicheDaten
+                        .Include("tblArbeitgeber")
+                        .Include("tblArbeitgeber.tblBeschaeftigungsArt")
+                        .Include("tblArbeitgeber.tblBranche")
+                        .Include("tblFamilienstand")
+                        .Include("tblFinanzielleSituation")
+                        .Include("tblIdentifikationsArt")
+                        .Include("tblKontaktdaten")
+                        .Include("tblKontoDaten")
+                        .Include("tblKreditdaten")
+                        .Include("tblAbschluss")
+                        .Include("tblTitel")
+                        .Include("tblWohnart")
+                        .Include("tblLand")
+                        .Where(x => x.ID_PersoenlicheDaten == idKunde).FirstOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Fehler in KundeLaden");
+                Debug.Indent();
+                Debug.WriteLine(ex.Message);
+                Debug.Unindent();
+                Debugger.Break();
+            }
+
+            Debug.Unindent();
+            return aktuellerKunde;
+        }
     }
 }
