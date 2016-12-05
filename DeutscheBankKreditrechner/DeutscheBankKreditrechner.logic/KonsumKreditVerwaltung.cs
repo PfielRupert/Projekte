@@ -531,7 +531,7 @@ namespace DeutscheBankKreditrechner.logic
         }
 
         public static bool KontaktdatenSpeichern(string strasse, string hausNr, string stiege, string etage, string tuer, string eMail 
-            , string telNr, int idKunde)
+            , string telNr,int id_PLZ, int idKunde)
         {
             Debug.WriteLine("KonsumKreditVerwaltung - KontaktDatenSpeichern");
             Debug.Indent();
@@ -556,7 +556,8 @@ namespace DeutscheBankKreditrechner.logic
                             Etage = etage,
                             Türnummer = tuer,
                             email = eMail,
-                            Tel = telNr                          
+                            Tel = telNr,
+                            FKOrt = id_PLZ                          
                         };
 
                         context.tblKontaktdaten.Add(neueKontaktdaten);
