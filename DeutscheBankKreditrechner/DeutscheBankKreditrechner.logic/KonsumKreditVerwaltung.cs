@@ -53,6 +53,40 @@ namespace DeutscheBankKreditrechner.logic
         }
 
         /// <summary>
+        /// Lädt den Kreditrahmen für die übergebene ID
+        /// </summary>
+        /// <param name="id">die id des zu ladenden Kreditrahmens</param>
+        /// <returns>der Kreditwunsch für die übergebene ID</returns>
+        public static tblKreditdaten KreditRahmenLaden(int id)
+        {
+            Debug.WriteLine("KonsumKreditVerwaltung - KreditRahmenLaden");
+            Debug.Indent();
+
+            tblKreditdaten wunsch = null;
+
+            try
+            {
+                using (var context = new dbLapProjektEntities())
+                {
+                    wunsch = context.tblKreditdaten.Where(x => x.ID_Kredit == id).FirstOrDefault();
+                    Debug.WriteLine("KreditRahmen geladen!");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Fehler in KreditRahmenLaden");
+                Debug.Indent();
+                Debug.WriteLine(ex.Message);
+                Debug.Unindent();
+                Debugger.Break();
+            }
+
+            Debug.Unindent();
+            return wunsch;
+        }
+
+
+        /// <summary>
         /// Speichert zu einer übergebenene ID_Kunde den Wunsch Kredit und dessen Laufzeit ab
         /// </summary>
         /// <param name="kreditBetrag">die Höhe des gewünschten Kredits</param>
