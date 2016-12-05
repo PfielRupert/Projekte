@@ -235,6 +235,38 @@ namespace DeutscheBankKreditrechner.logic
             return erfolgreich;
         }
 
+        /// Lädt den Kunden für die übergebene ID
+        /// </summary>
+        /// <param name="id">die id des zu ladenden Kunden</param>
+        /// <returns>der Kunde für die übergebene ID</returns>
+        public static tblPersoenlicheDaten PersönlicheDatenLaden(int id)
+        {
+            Debug.WriteLine("KonsumKreditVerwaltung - PersönlicheDatenLaden");
+            Debug.Indent();
+
+            tblPersoenlicheDaten persönlicheDaten = null;
+
+            try
+            {
+                using (var context = new dbLapProjektEntities())
+                {
+                    persönlicheDaten = context.tblPersoenlicheDaten.Where(x => x.ID_PersoenlicheDaten == id).FirstOrDefault();
+                    Debug.WriteLine("PersönlicheDatenLaden geladen!");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Fehler in PersönlicheDatenLaden");
+                Debug.Indent();
+                Debug.WriteLine(ex.Message);
+                Debug.Unindent();
+                Debugger.Break();
+            }
+
+            Debug.Unindent();
+            return persönlicheDaten;
+        }
+
         /// <summary>
         /// Liefert alle Branchen zurück
         /// </summary>
