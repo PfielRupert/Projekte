@@ -29,10 +29,7 @@ namespace DeutscheBankKreditrechner.web.Models
 
         [Display(Name = "Titel")]
         public int? ID_Titel { get; set; }
-
-        [Display(Name = "Titel (nachstehend)")]
-        public int? ID_TitelNachstehend { get; set; }
-
+               
         [DataType(DataType.Date)]
         public DateTime GeburtsDatum { get; set; }
 

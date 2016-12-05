@@ -14,11 +14,16 @@ namespace DeutscheBankKreditrechner.web.Models
         public string Stiege { get; set; }
         public string Etage { get; set; }
         public string Tuer { get; set; }
+        [Display(Name = "Wohnort")]
         public int ID_PLZ { get; set; }
+
         public string Mail { get; set; }
         public string TelefonNummer { get; set; }
         [HiddenInput(DisplayValue = false)]
         [Required]
         public int ID_Kunde { get; set; }
+
+        public List<PLZModel> AllePostleitZahlen { get; set; }
+
     }
 }

@@ -138,6 +138,7 @@
     <Compile Include="Models\KreditRahmenModel.cs" />
     <Compile Include="Models\NachschlageFeldModel.cs" />
     <Compile Include="Models\PersönlicheDatenModel.cs" />
+    <Compile Include="Models\PLZModel.cs" />
     <Compile Include="Models\StaatsbuergerschaftsModel.cs" />
     <Compile Include="Models\TitelModel.cs" />
     <Compile Include="Models\WohnartModel.cs" />

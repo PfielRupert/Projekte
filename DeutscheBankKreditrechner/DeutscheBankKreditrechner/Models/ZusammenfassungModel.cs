@@ -69,7 +69,11 @@ namespace DeutscheBankKreditrechner.web.Models
         #region KontaktDaten
         public string Strasse { get; set; }
         public string Hausnummer { get; set; }
+        public string Stiege { get; set; }
+        public string Etage { get; set; }
+        public string Türnummer { get; set; }
         public string Ort { get; set; }
+        public string PLZ { get; set; }
         public string Mail { get; set; }
         public string TelefonNummer { get; set; }
         #endregion

@@ -179,8 +179,7 @@ namespace DeutscheBankKreditrechner.Controllers
                                                     model.Geschlecht == Geschlecht.Männlich ? 1 : 2,
                                                     model.GeburtsDatum,
                                                     model.Vorname,
-                                                    model.Nachname,
-                                                    model.ID_TitelNachstehend,
+                                                    model.Nachname,                                                    
                                                     model.ID_Bildung,
                                                     model.ID_Familienstand,
                                                     model.ID_Identifikationsart,
@@ -292,11 +291,23 @@ namespace DeutscheBankKreditrechner.Controllers
             public ActionResult KontaktDaten()
             {
                 Debug.WriteLine("GET - KonsumKredit - Kontaktdaten");
+            List<PLZModel> AllePostleitZahlen = new List<PLZModel>();
 
-                KontaktDatenModel model = new KontaktDatenModel()
+            // Lade Orte aus Logic
+            foreach (var ort in KonsumKReditVerwaltung.PLZLaden())
+            {
+                AllePostleitZahlen.Add(new PLZModel()
                 {
-                    ID_Kunde = int.Parse(Request.Cookies["idKunde"].Value)
-                };
+                    ID = ort.ID_Ort.ToString(),
+                    Bezeichnung = ort.Ort + "(" + ort.PLZ + ")"
+                });
+            }
+
+            KontaktDatenModel model = new KontaktDatenModel()
+            {
+                AllePostleitZahlen = AllePostleitZahlen,
+                ID_Kunde = int.Parse(Request.Cookies["idKunde"].Value)
+            };
                 return View(model);
             }
 
@@ -372,7 +383,11 @@ namespace DeutscheBankKreditrechner.Controllers
 
                 model.Strasse = aktKunde.tblKontaktdaten?.Strasse;
                 model.Hausnummer = aktKunde.tblKontaktdaten?.Hausnummer;
-                model.Ort = aktKunde.tblKontaktdaten?.tblOrt.PLZ;
+                model.Stiege = aktKunde.tblKontaktdaten?.Stiege;
+                model.Etage = aktKunde.tblKontaktdaten?.Etage;
+                model.Türnummer = aktKunde.tblKontaktdaten?.Türnummer;
+                model.Ort = aktKunde.tblKontaktdaten?.tblOrt?.Ort;
+                model.PLZ = aktKunde.tblKontaktdaten?.tblOrt?.PLZ;
                 model.Mail = aktKunde.tblKontaktdaten?.email;
                 model.TelefonNummer = aktKunde.tblKontaktdaten?.Tel;
 

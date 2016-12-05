@@ -318,6 +318,37 @@ namespace DeutscheBankKreditrechner.logic
         }
 
         /// <summary>
+        /// Liefert alle Länder zurück
+        /// </summary>
+        /// <returns>alle Länder oder null bei einem Fehler</returns>
+        public static List<tblOrt> PLZLaden()
+        {
+            Debug.WriteLine("KonsumKreditVerwaltung - PLZ Laden");
+            Debug.Indent();
+
+            List<tblOrt> allePLZ = null;
+
+            try
+            {
+                using (var context = new dbLapProjektEntities())
+                {
+
+                    allePLZ = context.tblOrt.OrderBy(x=> x.PLZ).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Fehler in LaenderLaden");
+                Debug.Indent();
+                Debug.WriteLine(ex.Message);
+                Debug.Unindent();
+                Debugger.Break();
+            }
+
+            Debug.Unindent();
+            return allePLZ;
+        }
+        /// <summary>
         /// Liefert alle Wohnarten zurück
         /// </summary>
         /// <returns>alle Wohnarten oder null bei einem Fehler</returns>
@@ -429,7 +460,7 @@ namespace DeutscheBankKreditrechner.logic
         /// <param name="idWohnart">die Wohnart des Kunden</param>
         /// <param name="idKunde">die ID des Kunden</param>
         /// <returns>true wenn das Anpassen der Werte erfolgreich war, ansonsten false</returns>
-        public static bool PersönlicheDatenSpeichern(int? idTitel, int geschlecht, DateTime geburtsDatum, string vorname, string nachname, int? idTitelNachstehend, int idBildung, int idFamilienstand, int idIdentifikationsart, string identifikationsNummer, string idStaatsbuergerschaft, int idWohnart, int idKunde)
+        public static bool PersönlicheDatenSpeichern(int? idTitel, int geschlecht, DateTime geburtsDatum, string vorname, string nachname, int idBildung, int idFamilienstand, int idIdentifikationsart, string identifikationsNummer, string idStaatsbuergerschaft, int idWohnart, int idKunde)
         {
             Debug.WriteLine("KonsumKreditVerwaltung - PersönlicheDatenSpeichern");
             Debug.Indent();
@@ -604,7 +635,7 @@ namespace DeutscheBankKreditrechner.logic
                             BankName = bankName,
                             IBAN = iban,
                             BIC = bic,
-                            NeuesKonto = !neuesKonto,
+                            NeuesKonto = neuesKonto,
                             ID_KontoDaten = idKunde
                         };
 
@@ -657,6 +688,7 @@ namespace DeutscheBankKreditrechner.logic
                         .Include("tblTitel")
                         .Include("tblWohnart")
                         .Include("tblLand")
+                        .Include("tblKontaktdaten.tblOrt")
                         .Where(x => x.ID_PersoenlicheDaten == idKunde).FirstOrDefault();
                 }
             }
