@@ -17,8 +17,22 @@ namespace DeutscheBankKreditrechner.Controllers
             {
                 Debug.WriteLine("GET - KonsumKredit - KreditRahmen");
 
-                return View();
-            }
+                KreditRahmenModel model = new KreditRahmenModel()
+                {
+                    GewünschterBetrag = 25000,  // default Werte
+                    Laufzeit = 12   // default Werte
+                };
+                int id = -1;
+                if (Request.Cookies["idKunde"] != null && int.TryParse(Request.Cookies["idKunde"].Value, out id))
+                {
+                    /// lade Daten aus Datenbank
+                    tblKreditdaten wunsch = KonsumKReditVerwaltung.KreditRahmenLaden(id);
+                    model.GewünschterBetrag = (int)wunsch.GesamtBetrag;
+                    model.Laufzeit = wunsch.Laufzeit;
+                }
+
+                return View(model);
+        }
 
             [HttpPost]
             [ValidateAntiForgeryToken]
@@ -28,19 +42,27 @@ namespace DeutscheBankKreditrechner.Controllers
 
                 if (ModelState.IsValid)
                 {
-                    /// speichere Daten über BusinessLogic
-                    tblPersoenlicheDaten neuerKunde = KonsumKReditVerwaltung.ErzeugeKunde();
+                /// speichere Daten über BusinessLogic
+                    if (Request.Cookies["idKunde"] == null)
+                    {
+                        tblPersoenlicheDaten neuerKunde = KonsumKReditVerwaltung.ErzeugeKunde();
 
                     if (neuerKunde != null && KonsumKReditVerwaltung.KreditRahmenSpeichern(model.GewünschterBetrag, model.Laufzeit, neuerKunde.ID_PersoenlicheDaten))
+                        {
+                            Response.Cookies.Add(new HttpCookie("idKunde", neuerKunde.ID_PersoenlicheDaten.ToString()));
+                            /// gehe zum nächsten Schritt
+                            return RedirectToAction("FinanzielleSituation");
+                        }
+                    }
+                    else
                     {
-                        /// ich benötige für alle weiteren Schritte die ID
-                        /// des angelegten Kunden. Damit ich diese bei der nächsten Action
-                        /// habe, speichere ich sie für diesen Zweck in ein Cookie
-                        Response.Cookies.Add(new HttpCookie("idKunde", neuerKunde.ID_PersoenlicheDaten.ToString()));
-
+                    int idKunde = int.Parse(Request.Cookies["idKunde"].Value);
+                    if (KonsumKReditVerwaltung.KreditRahmenSpeichern(model.GewünschterBetrag, model.Laufzeit, idKunde))
+                    {
                         /// gehe zum nächsten Schritt
                         return RedirectToAction("FinanzielleSituation");
                     }
+                }
                 }
 
                 /// falls der ModelState NICHT valid ist, bleibe hier und
@@ -58,8 +80,16 @@ namespace DeutscheBankKreditrechner.Controllers
                 {
                     ID_Kunde = int.Parse(Request.Cookies["idKunde"].Value)
                 };
-
-                return View(model);
+            tblFinanzielleSituation situation = KonsumKReditVerwaltung.FinanzielleSituationLaden(model.ID_Kunde);
+            if (situation != null)
+            {
+                model.EinkünfteAlimenteUnterhalt = (double)situation.EinkuenfteAlimente.Value;
+                model.NettoEinkommen = (double)situation.NettoEinkommenJährlich;
+                model.RatenVerpflichtungen = (double)situation.BestehendeRatenVerpflichtungen.Value;
+                model.UnterhaltsZahlungen = (double)situation.Unterhaltszahlungen.Value;
+                model.Wohnkosten = (double)situation.WohnkostenMonatlich.Value;
+            }
+            return View(model);
             }
 
             [HttpPost]
@@ -162,7 +192,22 @@ namespace DeutscheBankKreditrechner.Controllers
                     AlleWohnartAngaben = alleWohnartAngaben,
                     ID_Kunde = int.Parse(Request.Cookies["idKunde"].Value)
                 };
-                return View(model);
+            tblPersoenlicheDaten kunde = KonsumKReditVerwaltung.PersönlicheDatenLaden(model.ID_Kunde);
+            if (kunde != null)
+            {
+                model.Geschlecht = kunde.FKGeschlecht == 1 ? Geschlecht.Männlich : Geschlecht.Weiblich;
+                model.Vorname = kunde.Vorname;
+                model.Nachname = kunde.Nachname;
+                model.ID_Titel = kunde.FKTitel;
+                model.GeburtsDatum = DateTime.Now;
+                model.ID_Staatsbuergerschaft = kunde.FKStaatsbuegerschaft;
+                model.ID_Familienstand = kunde.FKFamilienstand.Value;
+                model.ID_Wohnart = kunde.FKWohnart.Value;
+                model.ID_Bildung = kunde.FKAbschluss.Value;
+                model.ID_Identifikationsart = kunde.FkIdentifikationsArt.Value;
+                model.IdentifikationsNummer = kunde.Identifikationsnummer;
+            }
+            return View(model);
             }
 
             [HttpPost]
@@ -226,8 +271,15 @@ namespace DeutscheBankKreditrechner.Controllers
                     AlleBranchen = alleBranchen,
                     ID_Kunde = int.Parse(Request.Cookies["idKunde"].Value)
                 };
-
-                return View(model);
+                tblArbeitgeber arbeitgeberDaten = KonsumKReditVerwaltung.ArbeitgeberAngabenLaden(model.ID_Kunde);
+                if (arbeitgeberDaten != null)
+                {
+                    model.BeschäftigtSeit = arbeitgeberDaten.BeschaeftigtSeit.Value.ToShortDateString();
+                    model.FirmenName = arbeitgeberDaten.Firma;
+                    model.ID_BeschäftigungsArt = arbeitgeberDaten.FKBeschaeftigungsArt; ;
+                    model.ID_Branche = arbeitgeberDaten.FKBranche;
+                }
+            return View(model);
             }
 
             [HttpPost]
@@ -261,7 +313,15 @@ namespace DeutscheBankKreditrechner.Controllers
                 {
                     ID_Kunde = int.Parse(Request.Cookies["idKunde"].Value)
                 };
-                return View(model);
+                tblKontoDaten daten = KonsumKReditVerwaltung.KontoInformationenLaden(model.ID_Kunde);
+                if (daten != null)
+                {
+                    model.BankName = daten.BankName;
+                    model.BIC = daten.BIC;
+                    model.IBAN = daten.IBAN;
+                    model.NeuesKonto = daten.NeuesKonto.Value;
+                }
+            return View(model);
             }
 
             [HttpPost]
