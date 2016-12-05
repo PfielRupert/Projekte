@@ -544,7 +544,7 @@ namespace DeutscheBankKreditrechner.logic
                 {
 
                     /// speichere zum Kunden die Angaben
-                    tblKontaktdaten aktKunde = context.tblKontaktdaten.Where(x => x.ID_Kontaktdaten == idKunde).FirstOrDefault();
+                    tblPersoenlicheDaten aktKunde = context.tblPersoenlicheDaten.Where(x => x.ID_PersoenlicheDaten == idKunde).FirstOrDefault();
 
                     if (aktKunde != null)
                     {
@@ -557,7 +557,8 @@ namespace DeutscheBankKreditrechner.logic
                             Türnummer = tuer,
                             email = eMail,
                             Tel = telNr,
-                            FKOrt = id_PLZ                          
+                            FKOrt = id_PLZ,
+                            ID_Kontaktdaten = idKunde                          
                         };
 
                         context.tblKontaktdaten.Add(neueKontaktdaten);

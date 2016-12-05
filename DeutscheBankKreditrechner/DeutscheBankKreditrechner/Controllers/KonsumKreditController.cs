@@ -189,7 +189,7 @@ namespace DeutscheBankKreditrechner.Controllers
                                                     model.ID_Wohnart,
                                                     model.ID_Kunde))
                     {
-                        return RedirectToAction("Arbeitgeber");
+                        return RedirectToAction("KontaktDaten");
                     }
                 }
                 return View();
@@ -289,6 +289,45 @@ namespace DeutscheBankKreditrechner.Controllers
             }
 
             [HttpGet]
+            public ActionResult KontaktDaten()
+            {
+                Debug.WriteLine("GET - KonsumKredit - Kontaktdaten");
+
+                KontaktDatenModel model = new KontaktDatenModel()
+                {
+                    ID_Kunde = int.Parse(Request.Cookies["idKunde"].Value)
+                };
+                return View(model);
+            }
+
+            [HttpPost]
+            [ValidateAntiForgeryToken]
+            public ActionResult KontaktDaten(KontaktDatenModel model)
+            {
+                Debug.WriteLine("POST - KonsumKredit - Kontaktdaten");
+
+                if (ModelState.IsValid)
+                {
+                    /// speichere Daten über BusinessLogic
+                    if (KonsumKReditVerwaltung.KontaktdatenSpeichern(
+                                                    model.Strasse,
+                                                    model.Hausnummer,
+                                                    model.Stiege,
+                                                    model.Etage,
+                                                    model.Tuer,
+                                                    model.TelefonNummer,
+                                                    model.Mail,
+                                                    model.ID_PLZ,
+                                                    model.ID_Kunde))
+                    {
+                        return RedirectToAction("Arbeitgeber");
+                    }
+                }
+
+                return View();
+            }
+
+        [HttpGet]
             public ActionResult Zusammenfassung()
             {
                 Debug.WriteLine("GET - KonsumKredit - Zusammenfassung");
