@@ -266,6 +266,37 @@ namespace DeutscheBankKreditrechner.logic
             Debug.Unindent();
             return persönlicheDaten;
         }
+        /// Lädt den Kreditrahmen für die übergebene ID
+        /// </summary>
+        /// <param name="id">die id des zu ladenden Kreditrahmens</param>
+        /// <returns>der Kreditwunsch für die übergebene ID</returns>
+        public static tblArbeitgeber ArbeitgeberAngabenLaden(int id)
+        {
+            Debug.WriteLine("KonsumKreditVerwaltung - ArbeitgeberAngabenLaden");
+            Debug.Indent();
+
+            tblArbeitgeber arbeitGeber = null;
+
+            try
+            {
+                using (var context = new dbLapProjektEntities())
+                {
+                    arbeitGeber = context.tblArbeitgeber.Where(x => x.ID_Arbeitgeber == id).FirstOrDefault();
+                    Debug.WriteLine("ArbeitgeberAngaben geladen!");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Fehler in ArbeitgeberAngabenLaden");
+                Debug.Indent();
+                Debug.WriteLine(ex.Message);
+                Debug.Unindent();
+                Debugger.Break();
+            }
+
+            Debug.Unindent();
+            return arbeitGeber;
+        }
 
         /// <summary>
         /// Liefert alle Branchen zurück
