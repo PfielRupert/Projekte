@@ -202,22 +202,24 @@ namespace DeutscheBankKreditrechner.logic
 
                     if (aktKunde != null)
                     {
-                        tblFinanzielleSituation neueFinanzielleSituation = new tblFinanzielleSituation()
+                        tblFinanzielleSituation finanzielleSituation = context.tblFinanzielleSituation.FirstOrDefault(x => x.ID_FinanzielleSituation == idKunde);
+
+                        if (finanzielleSituation == null)
                         {
-                            NettoEinkommenJährlich = (double)nettoEinkommen,
-                            Unterhaltszahlungen = (double)unterhaltsZahlungen,
-                            EinkuenfteAlimente = (double)einkünfteAlimenteUnterhalt,
-                            WohnkostenMonatlich = (double)wohnkosten,
-                            BestehendeRatenVerpflichtungen = (double)ratenVerpflichtungen,
-                            ID_FinanzielleSituation = idKunde
-                        };
+                            finanzielleSituation = new tblFinanzielleSituation();
+                            context.tblFinanzielleSituation.Add(finanzielleSituation);
+                        }
+                        finanzielleSituation.NettoEinkommenJährlich = (double)nettoEinkommen;
+                        finanzielleSituation.Unterhaltszahlungen = (double)unterhaltsZahlungen;
+                        finanzielleSituation.EinkuenfteAlimente = (double)einkünfteAlimenteUnterhalt;
+                        finanzielleSituation.WohnkostenMonatlich = (double)wohnkosten;
+                        finanzielleSituation.BestehendeRatenVerpflichtungen = (double)ratenVerpflichtungen;
+                        finanzielleSituation.ID_FinanzielleSituation = idKunde;
 
-                        context.tblFinanzielleSituation.Add(neueFinanzielleSituation);
+                        int anzahlZeilenBetroffen = context.SaveChanges();
+                        erfolgreich = anzahlZeilenBetroffen >= 1;
+                        Debug.WriteLine($"{anzahlZeilenBetroffen} FinanzielleSituation gespeichert!");
                     }
-
-                    int anzahlZeilenBetroffen = context.SaveChanges();
-                    erfolgreich = anzahlZeilenBetroffen >= 1;
-                    Debug.WriteLine($"{anzahlZeilenBetroffen} FinanzielleSituation gespeichert!");
                 }
             }
             catch (Exception ex)
