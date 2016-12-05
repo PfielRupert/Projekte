@@ -85,7 +85,37 @@ namespace DeutscheBankKreditrechner.logic
             return wunsch;
         }
 
+        /// Lädt die FinanzielleSituation für die übergebene ID
+        /// </summary>
+        /// <param name="id">die id der zu ladenden FinanzielleSituation</param>
+        /// <returns>die FinanzielleSituation für die übergebene ID</returns>
+        public static tblFinanzielleSituation FinanzielleSituationLaden(int id)
+        {
+            Debug.WriteLine("KonsumKreditVerwaltung - FinanzielleSituationLaden");
+            Debug.Indent();
 
+            tblFinanzielleSituation finanzielleSituation = null;
+
+            try
+            {
+                using (var context = new dbLapProjektEntities())
+                {
+                    finanzielleSituation = context.tblFinanzielleSituation.Where(x => x.ID_FinanzielleSituation == id).FirstOrDefault();
+                    Debug.WriteLine("FinanzielleSituation geladen!");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Fehler in FinanzielleSituationLaden");
+                Debug.Indent();
+                Debug.WriteLine(ex.Message);
+                Debug.Unindent();
+                Debugger.Break();
+            }
+
+            Debug.Unindent();
+            return finanzielleSituation;
+        }
         /// <summary>
         /// Speichert zu einer übergebenene ID_Kunde den Wunsch Kredit und dessen Laufzeit ab
         /// </summary>
