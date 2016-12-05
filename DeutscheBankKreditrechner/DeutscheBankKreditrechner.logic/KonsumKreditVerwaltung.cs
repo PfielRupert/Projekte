@@ -804,21 +804,23 @@ namespace DeutscheBankKreditrechner.logic
 
                     if (aktKunde != null)
                     {
-                        tblKontoDaten neueKontoDaten = new tblKontoDaten()
+                        tblKontoDaten kontoDaten = context.tblKontoDaten.FirstOrDefault(x => x.ID_KontoDaten == idKunde);
+
+                        if (kontoDaten == null)
                         {
-                            BankName = bankName,
-                            IBAN = iban,
-                            BIC = bic,
-                            NeuesKonto = neuesKonto,
-                            ID_KontoDaten = idKunde
-                        };
+                            kontoDaten = new tblKontoDaten();
+                            context.tblKontoDaten.Add(kontoDaten);
 
-                        context.tblKontoDaten.Add(neueKontoDaten);
+                            kontoDaten.BankName = bankName;
+                            kontoDaten.IBAN = iban;
+                            kontoDaten.BIC = bic;
+                            kontoDaten.NeuesKonto = !neuesKonto;
+                            kontoDaten.ID_KontoDaten = idKunde;
+                        }
+                        int anzahlZeilenBetroffen = context.SaveChanges();
+                        erfolgreich = anzahlZeilenBetroffen >= 1;
+                        Debug.WriteLine($"{anzahlZeilenBetroffen} Konto-Daten gespeichert!");
                     }
-
-                    int anzahlZeilenBetroffen = context.SaveChanges();
-                    erfolgreich = anzahlZeilenBetroffen >= 1;
-                    Debug.WriteLine($"{anzahlZeilenBetroffen} Konto-Daten gespeichert!");
                 }
             }
             catch (Exception ex)
