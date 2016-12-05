@@ -530,6 +530,56 @@ namespace DeutscheBankKreditrechner.logic
             return erfolgreich;
         }
 
+        public static bool KontaktdatenSpeichern(string strasse, string hausNr, string stiege, string etage, string tuer, string eMail 
+            , string telNr, int idKunde)
+        {
+            Debug.WriteLine("KonsumKreditVerwaltung - KontaktDatenSpeichern");
+            Debug.Indent();
+
+            bool erfolgreich = false;
+
+            try
+            {
+                using (var context = new dbLapProjektEntities())
+                {
+
+                    /// speichere zum Kunden die Angaben
+                    tblKontaktdaten aktKunde = context.tblKontaktdaten.Where(x => x.ID_Kontaktdaten == idKunde).FirstOrDefault();
+
+                    if (aktKunde != null)
+                    {
+                        tblKontaktdaten neueKontaktdaten = new tblKontaktdaten()
+                        {
+                            Strasse = strasse,
+                            Hausnummer = hausNr,
+                            Stiege = stiege,
+                            Etage = etage,
+                            Türnummer = tuer,
+                            email = eMail,
+                            Tel = telNr                          
+                        };
+
+                        context.tblKontaktdaten.Add(neueKontaktdaten);
+                    }
+
+                    int anzahlZeilenBetroffen = context.SaveChanges();
+                    erfolgreich = anzahlZeilenBetroffen >= 1;
+                    Debug.WriteLine($"{anzahlZeilenBetroffen} Kontakt-Daten gespeichert!");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Fehler in KontoInformationenSpeichern");
+                Debug.Indent();
+                Debug.WriteLine(ex.Message);
+                Debug.Unindent();
+                Debugger.Break();
+            }
+
+            Debug.Unindent();
+            return erfolgreich;
+        }
+
         public static bool KontoinformationenSpeichern(string bankName, string iban, string bic, bool neuesKonto, int idKunde)
         {
             Debug.WriteLine("KonsumKreditVerwaltung - KontoInformationenSpeichern");
