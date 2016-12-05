@@ -110,14 +110,21 @@ namespace DeutscheBankKreditrechner.logic
 
                     if (aktKunde != null)
                     {
-                        tblKreditdaten neuerKreditWunsch = new tblKreditdaten()
+                        /// ermittle ob es bereits einen Kreditwunsch gibt
+                        tblKreditdaten neuerKreditWunsch = context.tblKreditdaten.FirstOrDefault(x => x.ID_Kredit == idKunde);
+                        /// nur wenn noch keiner existiert
+                        if (neuerKreditWunsch == null)
                         {
-                            GesamtBetrag = (double)kreditBetrag,
-                            Laufzeit = laufzeit,
-                            ID_Kredit = idKunde
-                        };
+                            /// lege einen neuen an
+                            neuerKreditWunsch = new tblKreditdaten()
+                            {
+                                GesamtBetrag = (double)kreditBetrag,
+                                Laufzeit = laufzeit,
+                                ID_Kredit = idKunde
+                            };
 
-                        context.tblKreditdaten.Add(neuerKreditWunsch);
+                            context.tblKreditdaten.Add(neuerKreditWunsch);
+                        }
                     }
 
                     int anzahlZeilenBetroffen = context.SaveChanges();
