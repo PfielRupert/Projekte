@@ -193,7 +193,7 @@ namespace DeutscheBankKreditrechner.Controllers
                     ID_Kunde = int.Parse(Request.Cookies["idKunde"].Value)
                 };
             tblPersoenlicheDaten kunde = KonsumKReditVerwaltung.PersönlicheDatenLaden(model.ID_Kunde);
-            if (kunde != null)
+            if (kunde.FKStaatsbuegerschaft != null)
             {
                 model.Geschlecht = kunde.FKGeschlecht == 1 ? Geschlecht.Männlich : Geschlecht.Weiblich;
                 model.Vorname = kunde.Vorname;

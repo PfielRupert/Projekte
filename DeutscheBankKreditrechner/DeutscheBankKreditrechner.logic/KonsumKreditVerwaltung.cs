@@ -810,15 +810,17 @@ namespace DeutscheBankKreditrechner.logic
                         {
                             kontoDaten = new tblKontoDaten();
                             context.tblKontoDaten.Add(kontoDaten);
+                        }
 
                             kontoDaten.BankName = bankName;
                             kontoDaten.IBAN = iban;
                             kontoDaten.BIC = bic;
-                            kontoDaten.NeuesKonto = !neuesKonto;
+                            kontoDaten.NeuesKonto = neuesKonto;
                             kontoDaten.ID_KontoDaten = idKunde;
-                        }
+                        
                         int anzahlZeilenBetroffen = context.SaveChanges();
                         erfolgreich = anzahlZeilenBetroffen >= 1;
+                        
                         Debug.WriteLine($"{anzahlZeilenBetroffen} Konto-Daten gespeichert!");
                     }
                 }
