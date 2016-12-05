@@ -669,14 +669,18 @@ namespace DeutscheBankKreditrechner.logic
 
                     if (aktKunde != null)
                     {
-                        tblArbeitgeber neuerArbeitgeber = new tblArbeitgeber()
+                        tblArbeitgeber arbeitgeber = context.tblArbeitgeber.FirstOrDefault(x => x.ID_Arbeitgeber == idKunde);
+
+                        if (arbeitgeber == null)
                         {
-                            BeschaeftigtSeitMonaten = DateTime.Now.Month - DateTime.Parse(beschäftigtSeit).Month,
-                            FKBranche = idBranche,
-                            FKBeschaeftigungsArt = idBeschäftigungsArt,
-                            Firma = firmenName
-                        };
-                        aktKunde.tblArbeitgeber = neuerArbeitgeber;
+                            arbeitgeber = new tblArbeitgeber();
+                            context.tblArbeitgeber.Add(arbeitgeber);
+                        }
+                        arbeitgeber.BeschaeftigtSeit = DateTime.Parse(beschäftigtSeit);
+                        arbeitgeber.FKBranche = idBranche;
+                        arbeitgeber.FKBeschaeftigungsArt = idBeschäftigungsArt;
+                        arbeitgeber.Firma = firmenName;
+                        aktKunde.tblArbeitgeber = arbeitgeber;
                     }
 
                     int anzahlZeilenBetroffen = context.SaveChanges();

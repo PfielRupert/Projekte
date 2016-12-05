@@ -116,7 +116,7 @@ create table tblFinanzielleSituation(
 create table tblArbeitgeber(
 	ID_Arbeitgeber int references tblPersoenlicheDaten primary key,
 	Firma varchar(50) not null,
-	BeschaeftigtSeitMonaten int, -- Jahr des Datums nehmen
+	BeschaeftigtSeit date, 
 	FKBeschaeftigungsArt int references tblBeschaeftigungsArt not null,
 	FKBranche int references tblBranche not null,
 )

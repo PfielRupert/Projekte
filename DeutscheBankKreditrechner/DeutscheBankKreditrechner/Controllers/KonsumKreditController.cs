@@ -379,7 +379,7 @@ namespace DeutscheBankKreditrechner.Controllers
                 model.FirmenName = aktKunde.tblArbeitgeber?.Firma;
                 model.BeschäftigungsArt = aktKunde.tblArbeitgeber?.tblBeschaeftigungsArt?.Beschaeftigungsart;
                 model.Branche = aktKunde.tblArbeitgeber?.tblBranche?.Branche;
-                model.BeschäftigtSeit = aktKunde.tblArbeitgeber?.BeschaeftigtSeitMonaten.ToString();
+                model.BeschäftigtSeit = aktKunde.tblArbeitgeber?.BeschaeftigtSeit.ToString();
 
                 model.Strasse = aktKunde.tblKontaktdaten?.Strasse;
                 model.Hausnummer = aktKunde.tblKontaktdaten?.Hausnummer;

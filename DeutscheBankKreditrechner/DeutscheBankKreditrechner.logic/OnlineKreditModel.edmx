@@ -18,7 +18,7 @@
           </Key>
           <Property Name="ID_Arbeitgeber" Type="int" Nullable="false" />
           <Property Name="Firma" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="BeschaeftigtSeitMonaten" Type="int" />
+          <Property Name="BeschaeftigtSeit" Type="date" />
           <Property Name="FKBeschaeftigungsArt" Type="int" Nullable="false" />
           <Property Name="FKBranche" Type="int" Nullable="false" />
         </EntityType>
@@ -571,12 +571,12 @@
           </Key>
           <Property Name="ID_Arbeitgeber" Type="Int32" Nullable="false" />
           <Property Name="Firma" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="BeschaeftigtSeitMonaten" Type="Int32" />
           <Property Name="FKBeschaeftigungsArt" Type="Int32" Nullable="false" />
           <Property Name="FKBranche" Type="Int32" Nullable="false" />
           <NavigationProperty Name="tblBeschaeftigungsArt" Relationship="OnlineKreditModel.FK__tblArbeit__FKBes__3B75D760" FromRole="tblArbeitgeber" ToRole="tblBeschaeftigungsArt" />
           <NavigationProperty Name="tblBranche" Relationship="OnlineKreditModel.FK__tblArbeit__FKBra__3C69FB99" FromRole="tblArbeitgeber" ToRole="tblBranche" />
           <NavigationProperty Name="tblPersoenlicheDaten" Relationship="OnlineKreditModel.FK__tblArbeit__ID_Ar__3A81B327" FromRole="tblArbeitgeber" ToRole="tblPersoenlicheDaten" />
+          <Property Name="BeschaeftigtSeit" Type="DateTime" Precision="0" />
         </EntityType>
         <EntityType Name="tblBeschaeftigungsArt">
           <Key>
@@ -947,9 +947,9 @@
           <EntitySetMapping Name="tblArbeitgeber">
             <EntityTypeMapping TypeName="OnlineKreditModel.tblArbeitgeber">
               <MappingFragment StoreEntitySet="tblArbeitgeber">
+                <ScalarProperty Name="BeschaeftigtSeit" ColumnName="BeschaeftigtSeit" />
                 <ScalarProperty Name="FKBranche" ColumnName="FKBranche" />
                 <ScalarProperty Name="FKBeschaeftigungsArt" ColumnName="FKBeschaeftigungsArt" />
-                <ScalarProperty Name="BeschaeftigtSeitMonaten" ColumnName="BeschaeftigtSeitMonaten" />
                 <ScalarProperty Name="Firma" ColumnName="Firma" />
                 <ScalarProperty Name="ID_Arbeitgeber" ColumnName="ID_Arbeitgeber" />
               </MappingFragment>

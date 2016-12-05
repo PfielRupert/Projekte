@@ -16,9 +16,9 @@ namespace DeutscheBankKreditrechner.logic
     {
         public int ID_Arbeitgeber { get; set; }
         public string Firma { get; set; }
-        public Nullable<int> BeschaeftigtSeitMonaten { get; set; }
         public int FKBeschaeftigungsArt { get; set; }
         public int FKBranche { get; set; }
+        public Nullable<System.DateTime> BeschaeftigtSeit { get; set; }
     
         public virtual tblBeschaeftigungsArt tblBeschaeftigungsArt { get; set; }
         public virtual tblBranche tblBranche { get; set; }
