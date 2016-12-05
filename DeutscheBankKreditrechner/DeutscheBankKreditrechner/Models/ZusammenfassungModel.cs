@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -63,6 +64,7 @@ namespace DeutscheBankKreditrechner.web.Models
 
         public string Branche { get; set; }
 
+        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}")]
         public string BeschäftigtSeit { get; set; }
         #endregion
 

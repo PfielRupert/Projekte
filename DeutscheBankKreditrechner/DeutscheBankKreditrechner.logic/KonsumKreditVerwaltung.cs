@@ -701,6 +701,40 @@ namespace DeutscheBankKreditrechner.logic
             return erfolgreich;
         }
 
+        /// <summary>
+        /// Lädt die KontoDaten für die übergebene ID
+        /// </summary>
+        /// <param name="id">die id der zu ladenden KontoDaten</param>
+        /// <returns>die KontoDaten für die übergebene ID</returns>
+        public static tblKontoDaten KontoInformationenLaden(int id)
+        {
+            Debug.WriteLine("KonsumKreditVerwaltung - KontoInformationenLaden");
+            Debug.Indent();
+
+            tblKontoDaten kontoDaten = null;
+
+            try
+            {
+                using (var context = new dbLapProjektEntities())
+                {
+                    kontoDaten = context.tblKontoDaten.Where(x => x.ID_KontoDaten == id).FirstOrDefault();
+                    Debug.WriteLine("KontoInformationen geladen!");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Fehler in KontoInformationenLaden");
+                Debug.Indent();
+                Debug.WriteLine(ex.Message);
+                Debug.Unindent();
+                Debugger.Break();
+            }
+
+            Debug.Unindent();
+            return kontoDaten;
+        }
+
+
         public static bool KontaktdatenSpeichern(string strasse, string hausNr, string stiege, string etage, string tuer, string eMail 
             , string telNr,int id_PLZ, int idKunde)
         {
