@@ -898,6 +898,7 @@ namespace DeutscheBankKreditrechner.logic
                         .Include("tblWohnart")
                         .Include("tblLand")
                         .Include("tblKontaktdaten.tblOrt")
+                        .Include("tblGeschlecht")
                         .Where(x => x.ID_PersoenlicheDaten == idKunde).FirstOrDefault();
                 }
             }

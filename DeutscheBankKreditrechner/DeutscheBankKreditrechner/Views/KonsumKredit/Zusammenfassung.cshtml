@@ -127,14 +127,7 @@
             @Html.DisplayFor(model => model.Nachname)
         </div>
     </div>
-    <div class="row">
-        <div class="col-lg-offset-1 col-md-offset-1 col-lg-3 col-md-3" style="text-align: right">
-            @Html.DisplayNameFor(model => model.TitelNachstehend)
-        </div>
-        <div class="col-lg-6 col-md-6">
-            @Html.DisplayFor(model => model.TitelNachstehend)
-        </div>
-    </div>
+    
     <div class="row">
         <div class="col-lg-offset-1 col-md-offset-1 col-lg-3 col-md-3" style="text-align: right">
             @Html.DisplayNameFor(model => model.GeburtsDatum)
@@ -367,17 +360,27 @@
 
     <hr />
     <h3>Einverständnis-Erklärung</h3>
-    <div class="row">
-        <div class="col-lg-offset-1 col-md-offset-1 col-lg-3 col-md-3" style="text-align: right">
+     @using (Html.BeginForm("Bestätigung", "KonsumKredit", FormMethod.Post))
+     {
+        <div class="row">
+            <div class="col-lg-offset-1 col-md-offset-1 col-lg-3 col-md-3" style="text-align: right">
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <input type="checkbox" name="bestätigt" value="true" />
+                Ich bestätige hiermit die Richtigkeit der Angaben und ersuche um Ausarbeitung
+                eines Kredit-Antrages
+            </div>
         </div>
-        <div class="col-lg-6 col-md-6">
-            Ich bestätige hiermit die Richtigkeit der Angaben und ersuche um Ausarbeitung
-            eines Kredit-Antrages
+   <div class="row">
+            <div class="col-lg-offset-4 col-md-offset-4 col-lg-3 col-md-3">
+
+
+                @Html.AntiForgeryToken()
+                @Html.Hidden("id", Model.ID_Kunde)
+
+                <input class="btn btn-default" type="submit" value="Bestätigen">
+
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-offset-4 col-md-offset-4 col-lg-3 col-md-3">
-            @Html.ActionLink("Bestätigen", "Bestätigen", "KonsumKredit", new { id = Model.ID_Kunde }, new { @class = "btn btn-default" })
-        </div>
-    </div>
+     }
 </div>

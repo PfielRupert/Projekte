@@ -38,8 +38,6 @@ namespace DeutscheBankKreditrechner.web.Models
 
         public string Titel { get; set; }
 
-        public string TitelNachstehend { get; set; }
-
         public DateTime GeburtsDatum { get; set; }
 
         public string Staatsbuergerschaft { get; set; }

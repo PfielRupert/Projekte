@@ -7,56 +7,57 @@ using System.Web.Mvc;
 using DeutscheBankKreditrechner.web.Models;
 using DeutscheBankKreditrechner.logic;
 using System.Globalization;
+using DeutescheBankKreditrechner.freigabe;
 
 namespace DeutscheBankKreditrechner.Controllers
 {
     public class KonsumKreditController : Controller
     {
-        
-            [HttpGet]
-            public ActionResult KreditRahmen()
+
+        [HttpGet]
+        public ActionResult KreditRahmen()
+        {
+            Debug.WriteLine("GET - KonsumKredit - KreditRahmen");
+
+            KreditRahmenModel model = new KreditRahmenModel()
             {
-                Debug.WriteLine("GET - KonsumKredit - KreditRahmen");
+                GewünschterBetrag = 25000,  // default Werte
+                Laufzeit = 12   // default Werte
+            };
+            int id = -1;
+            if (Request.Cookies["idKunde"] != null && int.TryParse(Request.Cookies["idKunde"].Value, out id))
+            {
+                /// lade Daten aus Datenbank
+                tblKreditdaten wunsch = KonsumKReditVerwaltung.KreditRahmenLaden(id);
+                model.GewünschterBetrag = (int)wunsch.GesamtBetrag;
+                model.Laufzeit = wunsch.Laufzeit;
+            }
 
-                KreditRahmenModel model = new KreditRahmenModel()
-                {
-                    GewünschterBetrag = 25000,  // default Werte
-                    Laufzeit = 12   // default Werte
-                };
-                int id = -1;
-                if (Request.Cookies["idKunde"] != null && int.TryParse(Request.Cookies["idKunde"].Value, out id))
-                {
-                    /// lade Daten aus Datenbank
-                    tblKreditdaten wunsch = KonsumKReditVerwaltung.KreditRahmenLaden(id);
-                    model.GewünschterBetrag = (int)wunsch.GesamtBetrag;
-                    model.Laufzeit = wunsch.Laufzeit;
-                }
-
-                return View(model);
+            return View(model);
         }
 
-            [HttpPost]
-            [ValidateAntiForgeryToken]
-            public ActionResult KreditRahmen(KreditRahmenModel model)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult KreditRahmen(KreditRahmenModel model)
+        {
+            Debug.WriteLine("POST - KonsumKredit - KreditRahmen");
+
+            if (ModelState.IsValid)
             {
-                Debug.WriteLine("POST - KonsumKredit - KreditRahmen");
-
-                if (ModelState.IsValid)
-                {
                 /// speichere Daten über BusinessLogic
-                    if (Request.Cookies["idKunde"] == null)
-                    {
-                        tblPersoenlicheDaten neuerKunde = KonsumKReditVerwaltung.ErzeugeKunde();
+                if (Request.Cookies["idKunde"] == null)
+                {
+                    tblPersoenlicheDaten neuerKunde = KonsumKReditVerwaltung.ErzeugeKunde();
 
-                        if (neuerKunde != null && KonsumKReditVerwaltung.KreditRahmenSpeichern(model.GewünschterBetrag, model.Laufzeit, neuerKunde.ID_PersoenlicheDaten))
-                            {
-                                Response.Cookies.Add(new HttpCookie("idKunde", neuerKunde.ID_PersoenlicheDaten.ToString()));
-                                /// gehe zum nächsten Schritt
-                                return RedirectToAction("FinanzielleSituation");
-                            }
-                    }
-                    else
+                    if (neuerKunde != null && KonsumKReditVerwaltung.KreditRahmenSpeichern(model.GewünschterBetrag, model.Laufzeit, neuerKunde.ID_PersoenlicheDaten))
                     {
+                        Response.Cookies.Add(new HttpCookie("idKunde", neuerKunde.ID_PersoenlicheDaten.ToString()));
+                        /// gehe zum nächsten Schritt
+                        return RedirectToAction("FinanzielleSituation");
+                    }
+                }
+                else
+                {
                     int idKunde = int.Parse(Request.Cookies["idKunde"].Value);
                     if (KonsumKReditVerwaltung.KreditRahmenSpeichern(model.GewünschterBetrag, model.Laufzeit, idKunde))
                     {
@@ -64,23 +65,23 @@ namespace DeutscheBankKreditrechner.Controllers
                         return RedirectToAction("FinanzielleSituation");
                     }
                 }
-                }
-
-                /// falls der ModelState NICHT valid ist, bleibe hier und
-                /// gib die Daten (falls vorhanden) wieder auf das UI
-                return View(model);
             }
 
-        
-        [HttpGet]
-            public ActionResult FinanzielleSituation()
-            {
-                Debug.WriteLine("GET - KonsumKredit - FinanzielleSituation");
+            /// falls der ModelState NICHT valid ist, bleibe hier und
+            /// gib die Daten (falls vorhanden) wieder auf das UI
+            return View(model);
+        }
 
-                FinanzielleSituationModel model = new FinanzielleSituationModel()
-                {
-                    ID_Kunde = int.Parse(Request.Cookies["idKunde"].Value)
-                };
+
+        [HttpGet]
+        public ActionResult FinanzielleSituation()
+        {
+            Debug.WriteLine("GET - KonsumKredit - FinanzielleSituation");
+
+            FinanzielleSituationModel model = new FinanzielleSituationModel()
+            {
+                ID_Kunde = int.Parse(Request.Cookies["idKunde"].Value)
+            };
             tblFinanzielleSituation situation = KonsumKReditVerwaltung.FinanzielleSituationLaden(model.ID_Kunde);
             if (situation != null)
             {
@@ -91,267 +92,267 @@ namespace DeutscheBankKreditrechner.Controllers
                 model.Wohnkosten = (double)situation.WohnkostenMonatlich.Value;
             }
             return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult FinanzielleSituation(FinanzielleSituationModel model)
+        {
+            Debug.WriteLine("POST - KonsumKredit - FinanzielleSituation");
+
+            if (ModelState.IsValid)
+            {
+                /// speichere Daten über BusinessLogic
+                if (KonsumKReditVerwaltung.FinanzielleSituationSpeichern(
+                                                model.NettoEinkommen,
+                                                model.RatenVerpflichtungen,
+                                                model.Wohnkosten,
+                                                model.EinkünfteAlimenteUnterhalt,
+                                                model.UnterhaltsZahlungen,
+                                                model.ID_Kunde))
+                {
+                    return RedirectToAction("PersönlicheDaten");
+                }
             }
 
-            [HttpPost]
-            [ValidateAntiForgeryToken]
-            public ActionResult FinanzielleSituation(FinanzielleSituationModel model)
+            return View(model);
+        }
+
+        [HttpGet]
+        public ActionResult PersönlicheDaten()
+        {
+            Debug.WriteLine("GET - KonsumKredit - PersönlicheDaten");
+
+            List<BildungsModel> alleBildungsAngaben = new List<BildungsModel>();
+            List<FamilienStandModel> alleFamilienStandAngaben = new List<FamilienStandModel>();
+            List<IdentifikationsModel> alleIdentifikationsAngaben = new List<IdentifikationsModel>();
+            List<StaatsbuergerschaftsModel> alleStaatsbuergerschaftsAngaben = new List<StaatsbuergerschaftsModel>();
+            List<TitelModel> alleTitelAngaben = new List<TitelModel>();
+            List<WohnartModel> alleWohnartAngaben = new List<WohnartModel>();
+
+
+            /// Lade Daten aus Logic
+            foreach (var bildungsAngabe in KonsumKReditVerwaltung.BildungsAngabenLaden())
             {
-                Debug.WriteLine("POST - KonsumKredit - FinanzielleSituation");
-
-                if (ModelState.IsValid)
+                alleBildungsAngaben.Add(new BildungsModel()
                 {
-                    /// speichere Daten über BusinessLogic
-                    if (KonsumKReditVerwaltung.FinanzielleSituationSpeichern(
-                                                    model.NettoEinkommen,
-                                                    model.RatenVerpflichtungen,
-                                                    model.Wohnkosten,
-                                                    model.EinkünfteAlimenteUnterhalt,
-                                                    model.UnterhaltsZahlungen,
-                                                    model.ID_Kunde))
-                    {
-                        return RedirectToAction("PersönlicheDaten");
-                    }
-                }
-
-                return View(model);
+                    ID = bildungsAngabe.ID_Abschluss.ToString(),
+                    Bezeichnung = bildungsAngabe.Abschluss
+                });
             }
 
-            [HttpGet]
-            public ActionResult PersönlicheDaten()
+            foreach (var familienStand in KonsumKReditVerwaltung.FamilienStandAngabenLaden())
             {
-                Debug.WriteLine("GET - KonsumKredit - PersönlicheDaten");
-
-                List<BildungsModel> alleBildungsAngaben = new List<BildungsModel>();
-                List<FamilienStandModel> alleFamilienStandAngaben = new List<FamilienStandModel>();
-                List<IdentifikationsModel> alleIdentifikationsAngaben = new List<IdentifikationsModel>();
-                List<StaatsbuergerschaftsModel> alleStaatsbuergerschaftsAngaben = new List<StaatsbuergerschaftsModel>();
-                List<TitelModel> alleTitelAngaben = new List<TitelModel>();
-                List<WohnartModel> alleWohnartAngaben = new List<WohnartModel>();
-
-
-                /// Lade Daten aus Logic
-                foreach (var bildungsAngabe in KonsumKReditVerwaltung.BildungsAngabenLaden())
+                alleFamilienStandAngaben.Add(new FamilienStandModel()
                 {
-                    alleBildungsAngaben.Add(new BildungsModel()
-                    {
-                        ID = bildungsAngabe.ID_Abschluss.ToString(),
-                        Bezeichnung = bildungsAngabe.Abschluss
-                    });
-                }
-
-                foreach (var familienStand in KonsumKReditVerwaltung.FamilienStandAngabenLaden())
+                    ID = familienStand.ID_Familienstand.ToString(),
+                    Bezeichnung = familienStand.Familienstand
+                });
+            }
+            foreach (var identifikationsAngabe in KonsumKReditVerwaltung.IdentifikiationsAngabenLaden())
+            {
+                alleIdentifikationsAngaben.Add(new IdentifikationsModel()
                 {
-                    alleFamilienStandAngaben.Add(new FamilienStandModel()
-                    {
-                        ID = familienStand.ID_Familienstand.ToString(),
-                        Bezeichnung = familienStand.Familienstand
-                    });
-                }
-                foreach (var identifikationsAngabe in KonsumKReditVerwaltung.IdentifikiationsAngabenLaden())
+                    ID = identifikationsAngabe.ID_IdentitifaktionsArt.ToString(),
+                    Bezeichnung = identifikationsAngabe.IdentitfikationsArt
+                });
+            }
+            foreach (var land in KonsumKReditVerwaltung.LaenderLaden())
+            {
+                alleStaatsbuergerschaftsAngaben.Add(new StaatsbuergerschaftsModel()
                 {
-                    alleIdentifikationsAngaben.Add(new IdentifikationsModel()
-                    {
-                        ID = identifikationsAngabe.ID_IdentitifaktionsArt.ToString(),
-                        Bezeichnung = identifikationsAngabe.IdentitfikationsArt
-                    });
-                }
-                foreach (var land in KonsumKReditVerwaltung.LaenderLaden())
+                    ID = land.ID_Land,
+                    Bezeichnung = land.Land
+                });
+            }
+            foreach (var titel in KonsumKReditVerwaltung.TitelLaden())
+            {
+                alleTitelAngaben.Add(new TitelModel()
                 {
-                    alleStaatsbuergerschaftsAngaben.Add(new StaatsbuergerschaftsModel()
-                    {
-                        ID = land.ID_Land,
-                        Bezeichnung = land.Land
-                    });
-                }
-                foreach (var titel in KonsumKReditVerwaltung.TitelLaden())
+                    ID = titel.ID_Titel.ToString(),
+                    Bezeichnung = titel.Titel
+                });
+            }
+            foreach (var wohnart in KonsumKReditVerwaltung.WohnartenLaden())
+            {
+                alleWohnartAngaben.Add(new WohnartModel()
                 {
-                    alleTitelAngaben.Add(new TitelModel()
-                    {
-                        ID = titel.ID_Titel.ToString(),
-                        Bezeichnung = titel.Titel
-                    });
-                }
-                foreach (var wohnart in KonsumKReditVerwaltung.WohnartenLaden())
-                {
-                    alleWohnartAngaben.Add(new WohnartModel()
-                    {
-                        ID = wohnart.ID_Wohnart.ToString(),
-                        Bezeichnung = wohnart.Wohnart
-                    });
-                }
+                    ID = wohnart.ID_Wohnart.ToString(),
+                    Bezeichnung = wohnart.Wohnart
+                });
+            }
 
 
 
-                PersönlicheDatenModel model = new PersönlicheDatenModel()
-                {
-                    AlleBildungAngaben = alleBildungsAngaben,
-                    AlleFamilienStandAngaben = alleFamilienStandAngaben,
-                    AlleIdentifikationsAngaben = alleIdentifikationsAngaben,
-                    AlleStaatsbuergerschaftsAngaben = alleStaatsbuergerschaftsAngaben,
-                    AlleTitelAngaben = alleTitelAngaben,
-                    AlleWohnartAngaben = alleWohnartAngaben,
-                    ID_Kunde = int.Parse(Request.Cookies["idKunde"].Value)
-                };
+            PersönlicheDatenModel model = new PersönlicheDatenModel()
+            {
+                AlleBildungAngaben = alleBildungsAngaben,
+                AlleFamilienStandAngaben = alleFamilienStandAngaben,
+                AlleIdentifikationsAngaben = alleIdentifikationsAngaben,
+                AlleStaatsbuergerschaftsAngaben = alleStaatsbuergerschaftsAngaben,
+                AlleTitelAngaben = alleTitelAngaben,
+                AlleWohnartAngaben = alleWohnartAngaben,
+                ID_Kunde = int.Parse(Request.Cookies["idKunde"].Value)
+            };
             tblPersoenlicheDaten kunde = KonsumKReditVerwaltung.PersönlicheDatenLaden(model.ID_Kunde);
             if (kunde.FKStaatsbuegerschaft != null)
             {
                 model.Geschlecht = kunde.FKGeschlecht == 1 ? Geschlecht.Männlich : Geschlecht.Weiblich;
                 model.Vorname = kunde.Vorname;
                 model.Nachname = kunde.Nachname;
-                model.ID_Titel = kunde.FKTitel;
+                model.ID_Titel = kunde.FKTitel.HasValue ? kunde.FKTitel.Value : 0;
                 model.GeburtsDatum = DateTime.Now;
                 model.ID_Staatsbuergerschaft = kunde.FKStaatsbuegerschaft;
-                model.ID_Familienstand = kunde.FKFamilienstand.Value;
-                model.ID_Wohnart = kunde.FKWohnart.Value;
-                model.ID_Bildung = kunde.FKAbschluss.Value;
-                model.ID_Identifikationsart = kunde.FkIdentifikationsArt.Value;
+                model.ID_Familienstand = kunde.FKFamilienstand.HasValue ? kunde.FKFamilienstand.Value : 0;
+                model.ID_Wohnart = kunde.FKWohnart.HasValue ? kunde.FKWohnart.Value : 0;
+                model.ID_Bildung = kunde.FKAbschluss.HasValue ? kunde.FKAbschluss.Value : 0;
+                model.ID_Identifikationsart = kunde.FkIdentifikationsArt.HasValue ? kunde.FkIdentifikationsArt.Value : 0;
                 model.IdentifikationsNummer = kunde.Identifikationsnummer;
             }
             return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult PersönlicheDaten(PersönlicheDatenModel model)
+        {
+            Debug.WriteLine("POST - KonsumKredit - PersönlicheDaten");
+
+            if (ModelState.IsValid)
+            {
+                /// speichere Daten über BusinessLogic
+                if (KonsumKReditVerwaltung.PersönlicheDatenSpeichern(
+                                                model.ID_Titel,
+                                                model.Geschlecht == Geschlecht.Männlich ? 1 : 2,
+                                                model.GeburtsDatum,
+                                                model.Vorname,
+                                                model.Nachname,
+                                                model.ID_Bildung,
+                                                model.ID_Familienstand,
+                                                model.ID_Identifikationsart,
+                                                model.IdentifikationsNummer,
+                                                model.ID_Staatsbuergerschaft,
+                                                model.ID_Wohnart,
+                                                model.ID_Kunde))
+                {
+                    return RedirectToAction("KontaktDaten");
+                }
+            }
+            return View();
+        }
+
+        [HttpGet]
+        public ActionResult Arbeitgeber()
+        {
+            Debug.WriteLine("GET - KonsumKredit - Arbeitgeber");
+
+            List<BeschaeftigungsArtModel> alleBeschaeftigungen = new List<BeschaeftigungsArtModel>();
+            List<BrancheModel> alleBranchen = new List<BrancheModel>();
+
+            foreach (var branche in KonsumKReditVerwaltung.BranchenLaden())
+            {
+                alleBranchen.Add(new BrancheModel()
+                {
+                    ID = branche.ID_Branche.ToString(),
+                    Bezeichnung = branche.Branche
+                });
             }
 
-            [HttpPost]
-            [ValidateAntiForgeryToken]
-            public ActionResult PersönlicheDaten(PersönlicheDatenModel model)
+            foreach (var beschaeftigungsArt in KonsumKReditVerwaltung.BeschaeftigungsArtenLaden())
             {
-                Debug.WriteLine("POST - KonsumKredit - PersönlicheDaten");
-
-                if (ModelState.IsValid)
+                alleBeschaeftigungen.Add(new BeschaeftigungsArtModel()
                 {
-                    /// speichere Daten über BusinessLogic
-                    if (KonsumKReditVerwaltung.PersönlicheDatenSpeichern(
-                                                    model.ID_Titel,
-                                                    model.Geschlecht == Geschlecht.Männlich ? 1 : 2,
-                                                    model.GeburtsDatum,
-                                                    model.Vorname,
-                                                    model.Nachname,                                                    
-                                                    model.ID_Bildung,
-                                                    model.ID_Familienstand,
-                                                    model.ID_Identifikationsart,
-                                                    model.IdentifikationsNummer,
-                                                    model.ID_Staatsbuergerschaft,
-                                                    model.ID_Wohnart,
-                                                    model.ID_Kunde))
-                    {
-                        return RedirectToAction("KontaktDaten");
-                    }
-                }
-                return View();
+                    ID = beschaeftigungsArt.ID_BeschaeftigungsArt.ToString(),
+                    Bezeichnung = beschaeftigungsArt.Beschaeftigungsart
+                });
             }
 
-            [HttpGet]
-            public ActionResult Arbeitgeber()
+            ArbeitgeberModel model = new ArbeitgeberModel()
             {
-                Debug.WriteLine("GET - KonsumKredit - Arbeitgeber");
-
-                List<BeschaeftigungsArtModel> alleBeschaeftigungen = new List<BeschaeftigungsArtModel>();
-                List<BrancheModel> alleBranchen = new List<BrancheModel>();
-
-                foreach (var branche in KonsumKReditVerwaltung.BranchenLaden())
-                {
-                    alleBranchen.Add(new BrancheModel()
-                    {
-                        ID = branche.ID_Branche.ToString(),
-                        Bezeichnung = branche.Branche
-                    });
-                }
-
-                foreach (var beschaeftigungsArt in KonsumKReditVerwaltung.BeschaeftigungsArtenLaden())
-                {
-                    alleBeschaeftigungen.Add(new BeschaeftigungsArtModel()
-                    {
-                        ID = beschaeftigungsArt.ID_BeschaeftigungsArt.ToString(),
-                        Bezeichnung = beschaeftigungsArt.Beschaeftigungsart
-                    });
-                }
-
-                ArbeitgeberModel model = new ArbeitgeberModel()
-                {
-                    AlleBeschaeftigungen = alleBeschaeftigungen,
-                    AlleBranchen = alleBranchen,
-                    ID_Kunde = int.Parse(Request.Cookies["idKunde"].Value)
-                };
-                tblArbeitgeber arbeitgeberDaten = KonsumKReditVerwaltung.ArbeitgeberAngabenLaden(model.ID_Kunde);
-                if (arbeitgeberDaten != null)
-                {
-                    model.BeschäftigtSeit = arbeitgeberDaten.BeschaeftigtSeit.ToShortDateString();
-                    model.FirmenName = arbeitgeberDaten.Firma;
-                    model.ID_BeschäftigungsArt = arbeitgeberDaten.FKBeschaeftigungsArt; ;
-                    model.ID_Branche = arbeitgeberDaten.FKBranche;
-                }
+                AlleBeschaeftigungen = alleBeschaeftigungen,
+                AlleBranchen = alleBranchen,
+                ID_Kunde = int.Parse(Request.Cookies["idKunde"].Value)
+            };
+            tblArbeitgeber arbeitgeberDaten = KonsumKReditVerwaltung.ArbeitgeberAngabenLaden(model.ID_Kunde);
+            if (arbeitgeberDaten != null)
+            {
+                model.BeschäftigtSeit = arbeitgeberDaten.BeschaeftigtSeit.ToShortDateString();
+                model.FirmenName = arbeitgeberDaten.Firma;
+                model.ID_BeschäftigungsArt = arbeitgeberDaten.FKBeschaeftigungsArt; ;
+                model.ID_Branche = arbeitgeberDaten.FKBranche;
+            }
             return View(model);
-            }
+        }
 
-            [HttpPost]
-            [ValidateAntiForgeryToken]
-            public ActionResult Arbeitgeber(ArbeitgeberModel model)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Arbeitgeber(ArbeitgeberModel model)
+        {
+            Debug.WriteLine("POST - KonsumKredit - Arbeitgeber");
+
+            if (ModelState.IsValid)
             {
-                Debug.WriteLine("POST - KonsumKredit - Arbeitgeber");
-
-                if (ModelState.IsValid)
+                /// speichere Daten über BusinessLogic
+                if (KonsumKReditVerwaltung.ArbeitgeberAngabenSpeichern(
+                                                model.FirmenName,
+                                                model.ID_BeschäftigungsArt,
+                                                model.ID_Branche,
+                                                model.BeschäftigtSeit,
+                                                model.ID_Kunde))
                 {
-                    /// speichere Daten über BusinessLogic
-                    if (KonsumKReditVerwaltung.ArbeitgeberAngabenSpeichern(
-                                                    model.FirmenName,
-                                                    model.ID_BeschäftigungsArt,
-                                                    model.ID_Branche,
-                                                    model.BeschäftigtSeit,
-                                                    model.ID_Kunde))
-                    {
-                        return RedirectToAction("KontoInformationen");
-                    }
+                    return RedirectToAction("KontoInformationen");
                 }
-                return View();
             }
+            return View();
+        }
 
-            [HttpGet]
-            public ActionResult KontoInformationen()
+        [HttpGet]
+        public ActionResult KontoInformationen()
+        {
+            Debug.WriteLine("GET - KonsumKredit - KontoInformationen");
+
+            KontoInformationenModel model = new KontoInformationenModel()
             {
-                Debug.WriteLine("GET - KonsumKredit - KontoInformationen");
-
-                KontoInformationenModel model = new KontoInformationenModel()
-                {
-                    ID_Kunde = int.Parse(Request.Cookies["idKunde"].Value)
-                };
-                tblKontoDaten daten = KonsumKReditVerwaltung.KontoInformationenLaden(model.ID_Kunde);
-                if (daten != null)
-                {
-                    model.BankName = daten.BankName;
-                    model.BIC = daten.BIC;
-                    model.IBAN = daten.IBAN;
-                    model.NeuesKonto = daten.NeuesKonto.Value;
-                }
+                ID_Kunde = int.Parse(Request.Cookies["idKunde"].Value)
+            };
+            tblKontoDaten daten = KonsumKReditVerwaltung.KontoInformationenLaden(model.ID_Kunde);
+            if (daten != null)
+            {
+                model.BankName = daten.BankName;
+                model.BIC = daten.BIC;
+                model.IBAN = daten.IBAN;
+                model.NeuesKonto = daten.NeuesKonto.Value;
+            }
             return View(model);
-            }
+        }
 
-            [HttpPost]
-            [ValidateAntiForgeryToken]
-            public ActionResult KontoInformationen(KontoInformationenModel model)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult KontoInformationen(KontoInformationenModel model)
+        {
+            Debug.WriteLine("POST - KonsumKredit - KontoInformationen");
+
+            if (ModelState.IsValid)
             {
-                Debug.WriteLine("POST - KonsumKredit - KontoInformationen");
-
-                if (ModelState.IsValid)
+                /// speichere Daten über BusinessLogic
+                if (KonsumKReditVerwaltung.KontoinformationenSpeichern(
+                                                model.BankName,
+                                                model.IBAN,
+                                                model.BIC,
+                                                model.NeuesKonto,
+                                                model.ID_Kunde))
                 {
-                    /// speichere Daten über BusinessLogic
-                    if (KonsumKReditVerwaltung.KontoinformationenSpeichern(
-                                                    model.BankName,
-                                                    model.IBAN,
-                                                    model.BIC,
-                                                    model.NeuesKonto,
-                                                    model.ID_Kunde))
-                    {
-                        return RedirectToAction("Zusammenfassung");
-                    }
+                    return RedirectToAction("Zusammenfassung");
                 }
-
-                return View();
             }
 
-            [HttpGet]
-            public ActionResult KontaktDaten()
-            {
-                Debug.WriteLine("GET - KonsumKredit - Kontaktdaten");
+            return View();
+        }
+
+        [HttpGet]
+        public ActionResult KontaktDaten()
+        {
+            Debug.WriteLine("GET - KonsumKredit - Kontaktdaten");
             List<PLZModel> AllePostleitZahlen = new List<PLZModel>();
 
             // Lade Orte aus Logic
@@ -371,7 +372,7 @@ namespace DeutscheBankKreditrechner.Controllers
             };
 
             tblKontaktdaten daten = KonsumKReditVerwaltung.KontaktdatenLaden(model.ID_Kunde);
-            if(daten != null)
+            if (daten != null)
             {
                 model.Mail = daten.email;
                 model.TelefonNummer = daten.Tel;
@@ -384,67 +385,67 @@ namespace DeutscheBankKreditrechner.Controllers
             }
 
 
-                return View(model);
-            }
+            return View(model);
+        }
 
-            [HttpPost]
-            [ValidateAntiForgeryToken]
-            public ActionResult KontaktDaten(KontaktDatenModel model)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult KontaktDaten(KontaktDatenModel model)
+        {
+            Debug.WriteLine("POST - KonsumKredit - Kontaktdaten");
+
+            if (ModelState.IsValid)
             {
-                Debug.WriteLine("POST - KonsumKredit - Kontaktdaten");
-
-                if (ModelState.IsValid)
+                /// speichere Daten über BusinessLogic
+                if (KonsumKReditVerwaltung.KontaktdatenSpeichern(
+                                                model.Strasse,
+                                                model.Hausnummer,
+                                                model.Stiege,
+                                                model.Etage,
+                                                model.Tuer,
+                                                model.Mail,
+                                                model.TelefonNummer,
+                                                model.ID_PLZ,
+                                                model.ID_Kunde))
                 {
-                    /// speichere Daten über BusinessLogic
-                    if (KonsumKReditVerwaltung.KontaktdatenSpeichern(
-                                                    model.Strasse,
-                                                    model.Hausnummer,
-                                                    model.Stiege,
-                                                    model.Etage,
-                                                    model.Tuer,
-                                                    model.Mail,
-                                                    model.TelefonNummer,
-                                                    model.ID_PLZ,
-                                                    model.ID_Kunde))
-                    {
-                        return RedirectToAction("Arbeitgeber");
-                    }
+                    return RedirectToAction("Arbeitgeber");
                 }
-
-                return View();
             }
+
+            return View();
+        }
 
         [HttpGet]
-            public ActionResult Zusammenfassung()
-            {
-                Debug.WriteLine("GET - KonsumKredit - Zusammenfassung");
+        public ActionResult Zusammenfassung()
+        {
+            Debug.WriteLine("GET - KonsumKredit - Zusammenfassung");
 
-                /// ermittle für diese Kunden_ID
-                /// alle gespeicherten Daten (ACHTUNG! das sind viele ....)
-                /// gib Sie alle in das ZusammenfassungsModel (bzw. die UNTER-Modelle) 
-                /// hinein.
-                ZusammenfassungModel model = new ZusammenfassungModel();
-                model.ID_Kunde = int.Parse(Request.Cookies["idKunde"].Value);
+            /// ermittle für diese Kunden_ID
+            /// alle gespeicherten Daten (ACHTUNG! das sind viele ....)
+            /// gib Sie alle in das ZusammenfassungsModel (bzw. die UNTER-Modelle) 
+            /// hinein.
+            ZusammenfassungModel model = new ZusammenfassungModel();
+            model.ID_Kunde = int.Parse(Request.Cookies["idKunde"].Value);
 
-                /// lädt ALLE Daten zu diesem Kunden (also auch die angehängten/referenzierten
-                /// Entities) aus der DB
-                tblPersoenlicheDaten aktKunde = KonsumKReditVerwaltung.KundeLaden(model.ID_Kunde);
+            /// lädt ALLE Daten zu diesem Kunden (also auch die angehängten/referenzierten
+            /// Entities) aus der DB
+            tblPersoenlicheDaten aktKunde = KonsumKReditVerwaltung.KundeLaden(model.ID_Kunde);
 
-                model.GewünschterBetrag = (int)aktKunde.tblKreditdaten.GesamtBetrag;
-                model.Laufzeit = aktKunde.tblKreditdaten.Laufzeit;
+            model.GewünschterBetrag = (int)aktKunde.tblKreditdaten.GesamtBetrag;
+            model.Laufzeit = aktKunde.tblKreditdaten.Laufzeit;
 
-                model.NettoEinkommen = (double)aktKunde.tblFinanzielleSituation.NettoEinkommenJährlich;
-                model.Wohnkosten = (double)aktKunde.tblFinanzielleSituation.WohnkostenMonatlich.Value;
-                model.EinkünfteAlimenteUnterhalt = (double)aktKunde.tblFinanzielleSituation.EinkuenfteAlimente.Value;
-                model.UnterhaltsZahlungen = (double)aktKunde.tblFinanzielleSituation.Unterhaltszahlungen.Value;
-                model.RatenVerpflichtungen = (double)aktKunde.tblFinanzielleSituation.BestehendeRatenVerpflichtungen.Value;
+            model.NettoEinkommen = (double)aktKunde.tblFinanzielleSituation.NettoEinkommenJährlich;
+            model.Wohnkosten = (double)aktKunde.tblFinanzielleSituation.WohnkostenMonatlich.Value;
+            model.EinkünfteAlimenteUnterhalt = (double)aktKunde.tblFinanzielleSituation.EinkuenfteAlimente.Value;
+            model.UnterhaltsZahlungen = (double)aktKunde.tblFinanzielleSituation.Unterhaltszahlungen.Value;
+            model.RatenVerpflichtungen = (double)aktKunde.tblFinanzielleSituation.BestehendeRatenVerpflichtungen.Value;
 
-                model.Geschlecht = aktKunde.FKGeschlecht == 1 ? "Herr" : "Frau";
-                model.Vorname = aktKunde.Vorname;
-                model.Nachname = aktKunde.Nachname;
-                model.Titel = aktKunde.tblTitel?.Titel;
-                model.GeburtsDatum = DateTime.Now;
-                model.Staatsbuergerschaft = aktKunde.tblLand?.Land;
+            model.Geschlecht = aktKunde.FKGeschlecht == 1 ? "Herr" : "Frau";
+            model.Vorname = aktKunde.Vorname;
+            model.Nachname = aktKunde.Nachname;
+            model.Titel = aktKunde.tblTitel?.Titel;
+            model.GeburtsDatum = DateTime.Now;
+            model.Staatsbuergerschaft = aktKunde.tblLand?.Land;
             if (aktKunde.UHPKinder != null)
             {
                 model.AnzahlUnterhaltspflichtigeKinder = (int)aktKunde.UHPKinder;
@@ -454,42 +455,72 @@ namespace DeutscheBankKreditrechner.Controllers
                 model.AnzahlUnterhaltspflichtigeKinder = 0;
             }
             model.Familienstand = aktKunde.tblFamilienstand?.Familienstand;
-                model.Wohnart = aktKunde.tblWohnart?.Wohnart;
-                model.Bildung = aktKunde.tblAbschluss?.Abschluss;
-                model.Identifikationsart = aktKunde.tblIdentifikationsArt?.IdentitfikationsArt;
-                model.IdentifikationsNummer = aktKunde.Identifikationsnummer;
+            model.Wohnart = aktKunde.tblWohnart?.Wohnart;
+            model.Bildung = aktKunde.tblAbschluss?.Abschluss;
+            model.Identifikationsart = aktKunde.tblIdentifikationsArt?.IdentitfikationsArt;
+            model.IdentifikationsNummer = aktKunde.Identifikationsnummer;
 
-                model.FirmenName = aktKunde.tblArbeitgeber?.Firma;
-                model.BeschäftigungsArt = aktKunde.tblArbeitgeber?.tblBeschaeftigungsArt?.Beschaeftigungsart;
-                model.Branche = aktKunde.tblArbeitgeber?.tblBranche?.Branche;
-                model.BeschäftigtSeit = aktKunde.tblArbeitgeber?.BeschaeftigtSeit.ToString("MM/yyyy",
-                                CultureInfo.InvariantCulture);
+            model.FirmenName = aktKunde.tblArbeitgeber?.Firma;
+            model.BeschäftigungsArt = aktKunde.tblArbeitgeber?.tblBeschaeftigungsArt?.Beschaeftigungsart;
+            model.Branche = aktKunde.tblArbeitgeber?.tblBranche?.Branche;
+            model.BeschäftigtSeit = aktKunde.tblArbeitgeber?.BeschaeftigtSeit.ToString("MM/yyyy",
+                            CultureInfo.InvariantCulture);
 
-                model.Strasse = aktKunde.tblKontaktdaten?.Strasse;
-                model.Hausnummer = aktKunde.tblKontaktdaten?.Hausnummer;
-                model.Stiege = aktKunde.tblKontaktdaten?.Stiege;
-                model.Etage = aktKunde.tblKontaktdaten?.Etage;
-                model.Türnummer = aktKunde.tblKontaktdaten?.Türnummer;
-                model.Ort = aktKunde.tblKontaktdaten?.tblOrt?.Ort;
-                model.PLZ = aktKunde.tblKontaktdaten?.tblOrt?.PLZ;
-                model.Mail = aktKunde.tblKontaktdaten?.email;
-                model.TelefonNummer = aktKunde.tblKontaktdaten?.Tel;
+            model.Strasse = aktKunde.tblKontaktdaten?.Strasse;
+            model.Hausnummer = aktKunde.tblKontaktdaten?.Hausnummer;
+            model.Stiege = aktKunde.tblKontaktdaten?.Stiege;
+            model.Etage = aktKunde.tblKontaktdaten?.Etage;
+            model.Türnummer = aktKunde.tblKontaktdaten?.Türnummer;
+            model.Ort = aktKunde.tblKontaktdaten?.tblOrt?.Ort;
+            model.PLZ = aktKunde.tblKontaktdaten?.tblOrt?.PLZ;
+            model.Mail = aktKunde.tblKontaktdaten?.email;
+            model.TelefonNummer = aktKunde.tblKontaktdaten?.Tel;
 
-                model.NeuesKonto = (bool)aktKunde.tblKontoDaten?.NeuesKonto.Value;
-                model.BankName = aktKunde.tblKontoDaten?.BankName;
-                model.IBAN = aktKunde.tblKontoDaten?.IBAN;
-                model.BIC = aktKunde.tblKontoDaten?.BIC;
+            model.NeuesKonto = (bool)aktKunde.tblKontoDaten?.NeuesKonto.Value;
+            model.BankName = aktKunde.tblKontoDaten?.BankName;
+            model.IBAN = aktKunde.tblKontoDaten?.IBAN;
+            model.BIC = aktKunde.tblKontoDaten?.BIC;
 
-                /// gib model an die View
-                return View(model);
-            }
+            /// gib model an die View
+            return View(model);
+        }
 
-            [HttpPost]
-            [ValidateAntiForgeryToken]
-            public ActionResult Zusammenfassung(ZusammenfassungModel model)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Bestätigung(int id, bool? bestätigt)
+        {
+            if (bestätigt.HasValue && bestätigt.Value)
             {
-                Debug.WriteLine("POST - KonsumKredit - Zusammenfassung");
-                return View();
+                Debug.WriteLine("POST - KonsumKredit - Bestätigung");
+                Debug.Indent();
+
+
+                //int idKunde = int.Parse(Request.Cookies["idKunde"].Value);
+                tblPersoenlicheDaten aktKunde = KonsumKReditVerwaltung.KundeLaden(id);
+                Response.Cookies.Remove("idKunde");
+
+                bool istFreigegeben = KreditFreigabe.FreigabeErteilt(
+                                                          aktKunde.tblGeschlecht.GeschlechtShort,
+                                                            aktKunde.Vorname,
+                                                            aktKunde.Nachname,
+                                                            aktKunde.tblFamilienstand.Familienstand,
+                                                            (double)aktKunde.tblFinanzielleSituation.NettoEinkommenJährlich,
+                                                            (double)aktKunde.tblFinanzielleSituation.WohnkostenMonatlich,
+                                                            (double)aktKunde.tblFinanzielleSituation.EinkuenfteAlimente,
+                                                            (double)aktKunde.tblFinanzielleSituation.Unterhaltszahlungen,
+                                                            (double)aktKunde.tblFinanzielleSituation.BestehendeRatenVerpflichtungen);
+
+                /// Rüfe Service/DLL auf und prüfe auf Kreditfreigabe
+                Debug.WriteLine($"Kreditfreigabe {(istFreigegeben ? "" : "nicht")}erteilt!");
+
+                Debug.Unindent();
+                return RedirectToAction("Index", "Freigabe", new { erfolgreich = istFreigegeben });
+
+            }
+            else
+            {
+                return RedirectToAction("Zusammenfassung");
             }
         }
     }
+}

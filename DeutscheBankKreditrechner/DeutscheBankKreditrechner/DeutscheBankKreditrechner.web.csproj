@@ -121,6 +121,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\FreigabeController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\KonsumKreditController.cs" />
     <Compile Include="Global.asax.cs">
@@ -302,6 +303,7 @@
     <Content Include="Views\KonsumKredit\Kontoinformationen.cshtml" />
     <Content Include="Views\KonsumKredit\KontaktDaten.cshtml" />
     <Content Include="Views\KonsumKredit\Zusammenfassung.cshtml" />
+    <Content Include="Views\Freigabe\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -311,6 +313,10 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DeutescheBankKreditrechner.freigabe\DeutescheBankKreditrechner.freigabe.csproj">
+      <Project>{ceb66219-b62d-455a-98a1-14b5f3ec8e86}</Project>
+      <Name>DeutescheBankKreditrechner.freigabe</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DeutscheBankKreditrechner.logic\DeutscheBankKreditrechner.logic.csproj">
       <Project>{cb552805-39c4-4a11-bcfd-95e0cdd92f16}</Project>
       <Name>DeutscheBankKreditrechner.logic</Name>
