@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using DeutscheBankKreditrechner.web.Models;
 using DeutscheBankKreditrechner.logic;
+using System.Globalization;
 
 namespace DeutscheBankKreditrechner.Controllers
 {
@@ -274,7 +275,7 @@ namespace DeutscheBankKreditrechner.Controllers
                 tblArbeitgeber arbeitgeberDaten = KonsumKReditVerwaltung.ArbeitgeberAngabenLaden(model.ID_Kunde);
                 if (arbeitgeberDaten != null)
                 {
-                    model.BeschäftigtSeit = arbeitgeberDaten.BeschaeftigtSeit.Value.ToShortDateString();
+                    model.BeschäftigtSeit = arbeitgeberDaten.BeschaeftigtSeit.ToShortDateString();
                     model.FirmenName = arbeitgeberDaten.Firma;
                     model.ID_BeschäftigungsArt = arbeitgeberDaten.FKBeschaeftigungsArt; ;
                     model.ID_Branche = arbeitgeberDaten.FKBranche;
@@ -461,7 +462,8 @@ namespace DeutscheBankKreditrechner.Controllers
                 model.FirmenName = aktKunde.tblArbeitgeber?.Firma;
                 model.BeschäftigungsArt = aktKunde.tblArbeitgeber?.tblBeschaeftigungsArt?.Beschaeftigungsart;
                 model.Branche = aktKunde.tblArbeitgeber?.tblBranche?.Branche;
-                model.BeschäftigtSeit = aktKunde.tblArbeitgeber?.BeschaeftigtSeit.ToString();
+                model.BeschäftigtSeit = aktKunde.tblArbeitgeber?.BeschaeftigtSeit.ToString("MM/yyyy",
+                                CultureInfo.InvariantCulture);
 
                 model.Strasse = aktKunde.tblKontaktdaten?.Strasse;
                 model.Hausnummer = aktKunde.tblKontaktdaten?.Hausnummer;

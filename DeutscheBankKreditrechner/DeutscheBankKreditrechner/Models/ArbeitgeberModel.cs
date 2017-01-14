@@ -24,6 +24,7 @@ namespace DeutscheBankKreditrechner.web.Models
         [DataType(DataType.Date)]
         [DisplayFormat(ApplyFormatInEditMode = true, ConvertEmptyStringToNull = true, DataFormatString = "MM.yyyy")]
         [Display(Name = "beschäftigt seit")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Pflichtfeld")]
         public string BeschäftigtSeit { get; set; }
 
         public List<BeschaeftigungsArtModel> AlleBeschaeftigungen { get; set; }

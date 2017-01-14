@@ -64,7 +64,6 @@ namespace DeutscheBankKreditrechner.web.Models
 
         public string Branche { get; set; }
 
-        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}")]
         public string BeschäftigtSeit { get; set; }
         #endregion
 
