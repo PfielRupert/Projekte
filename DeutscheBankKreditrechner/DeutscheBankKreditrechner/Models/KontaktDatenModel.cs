@@ -16,8 +16,9 @@ namespace DeutscheBankKreditrechner.web.Models
         public string Tuer { get; set; }
         [Display(Name = "Wohnort")]
         public int ID_PLZ { get; set; }
-
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Pflichtfeld")]
         public string Mail { get; set; }
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Pflichtfeld")]
         public string TelefonNummer { get; set; }
         [HiddenInput(DisplayValue = false)]
         [Required]

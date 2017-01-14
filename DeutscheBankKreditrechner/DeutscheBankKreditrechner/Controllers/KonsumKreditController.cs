@@ -47,12 +47,12 @@ namespace DeutscheBankKreditrechner.Controllers
                     {
                         tblPersoenlicheDaten neuerKunde = KonsumKReditVerwaltung.ErzeugeKunde();
 
-                    if (neuerKunde != null && KonsumKReditVerwaltung.KreditRahmenSpeichern(model.GewünschterBetrag, model.Laufzeit, neuerKunde.ID_PersoenlicheDaten))
-                        {
-                            Response.Cookies.Add(new HttpCookie("idKunde", neuerKunde.ID_PersoenlicheDaten.ToString()));
-                            /// gehe zum nächsten Schritt
-                            return RedirectToAction("FinanzielleSituation");
-                        }
+                        if (neuerKunde != null && KonsumKReditVerwaltung.KreditRahmenSpeichern(model.GewünschterBetrag, model.Laufzeit, neuerKunde.ID_PersoenlicheDaten))
+                            {
+                                Response.Cookies.Add(new HttpCookie("idKunde", neuerKunde.ID_PersoenlicheDaten.ToString()));
+                                /// gehe zum nächsten Schritt
+                                return RedirectToAction("FinanzielleSituation");
+                            }
                     }
                     else
                     {
@@ -368,6 +368,21 @@ namespace DeutscheBankKreditrechner.Controllers
                 AllePostleitZahlen = AllePostleitZahlen,
                 ID_Kunde = int.Parse(Request.Cookies["idKunde"].Value)
             };
+
+            tblKontaktdaten daten = KonsumKReditVerwaltung.KontaktdatenLaden(model.ID_Kunde);
+            if(daten != null)
+            {
+                model.Mail = daten.email;
+                model.TelefonNummer = daten.Tel;
+                model.Strasse = daten.Strasse;
+                model.Hausnummer = daten.Hausnummer;
+                model.Stiege = daten.Stiege;
+                model.Etage = daten.Etage;
+                model.Tuer = daten.Türnummer;
+                model.ID_PLZ = daten.FKOrt;
+            }
+
+
                 return View(model);
             }
 
@@ -386,8 +401,8 @@ namespace DeutscheBankKreditrechner.Controllers
                                                     model.Stiege,
                                                     model.Etage,
                                                     model.Tuer,
-                                                    model.TelefonNummer,
                                                     model.Mail,
+                                                    model.TelefonNummer,
                                                     model.ID_PLZ,
                                                     model.ID_Kunde))
                     {
@@ -429,8 +444,15 @@ namespace DeutscheBankKreditrechner.Controllers
                 model.Titel = aktKunde.tblTitel?.Titel;
                 model.GeburtsDatum = DateTime.Now;
                 model.Staatsbuergerschaft = aktKunde.tblLand?.Land;
-                model.AnzahlUnterhaltspflichtigeKinder = -1;
-                model.Familienstand = aktKunde.tblFamilienstand?.Familienstand;
+            if (aktKunde.UHPKinder != null)
+            {
+                model.AnzahlUnterhaltspflichtigeKinder = (int)aktKunde.UHPKinder;
+            }
+            else
+            {
+                model.AnzahlUnterhaltspflichtigeKinder = 0;
+            }
+            model.Familienstand = aktKunde.tblFamilienstand?.Familienstand;
                 model.Wohnart = aktKunde.tblWohnart?.Wohnart;
                 model.Bildung = aktKunde.tblAbschluss?.Abschluss;
                 model.Identifikationsart = aktKunde.tblIdentifikationsArt?.IdentitfikationsArt;

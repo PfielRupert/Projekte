@@ -68,7 +68,7 @@ namespace DeutscheBankKreditrechner.logic
             {
                 using (var context = new dbLapProjektEntities())
                 {
-                    wunsch = context.tblKreditdaten.Where(x => x.ID_Kredit == id).FirstOrDefault();
+                    wunsch = context.tblKreditdaten.FirstOrDefault(x => x.ID_Kredit == id);
                     Debug.WriteLine("KreditRahmen geladen!");
                 }
             }
@@ -146,19 +146,16 @@ namespace DeutscheBankKreditrechner.logic
                         if (neuerKreditWunsch == null)
                         {
                             /// lege einen neuen an
-                            neuerKreditWunsch = new tblKreditdaten()
-                            {
-                                GesamtBetrag = (double)kreditBetrag,
-                                Laufzeit = laufzeit,
-                                ID_Kredit = idKunde
-                            };
-
+                            neuerKreditWunsch = new tblKreditdaten();
                             context.tblKreditdaten.Add(neuerKreditWunsch);
                         }
+                        neuerKreditWunsch.GesamtBetrag = (double)kreditBetrag;
+                        neuerKreditWunsch.Laufzeit = laufzeit;
+                        neuerKreditWunsch.ID_Kredit = idKunde;
                     }
 
                     int anzahlZeilenBetroffen = context.SaveChanges();
-                    erfolgreich = anzahlZeilenBetroffen >= 1;
+                    erfolgreich = anzahlZeilenBetroffen >= 0;
                     Debug.WriteLine($"{anzahlZeilenBetroffen} KreditRahmen gespeichert!");
                 }
             }
@@ -217,7 +214,7 @@ namespace DeutscheBankKreditrechner.logic
                         finanzielleSituation.ID_FinanzielleSituation = idKunde;
 
                         int anzahlZeilenBetroffen = context.SaveChanges();
-                        erfolgreich = anzahlZeilenBetroffen >= 1;
+                        erfolgreich = anzahlZeilenBetroffen >= 0;
                         Debug.WriteLine($"{anzahlZeilenBetroffen} FinanzielleSituation gespeichert!");
                     }
                 }
@@ -626,7 +623,7 @@ namespace DeutscheBankKreditrechner.logic
                     }
 
                     int anzahlZeilenBetroffen = context.SaveChanges();
-                    erfolgreich = anzahlZeilenBetroffen >= 1;
+                    erfolgreich = anzahlZeilenBetroffen >= 0;
                     Debug.WriteLine($"{anzahlZeilenBetroffen} PersönlicheDaten gespeichert!");
                 }
             }
@@ -684,7 +681,7 @@ namespace DeutscheBankKreditrechner.logic
                     }
 
                     int anzahlZeilenBetroffen = context.SaveChanges();
-                    erfolgreich = anzahlZeilenBetroffen >= 1;
+                    erfolgreich = anzahlZeilenBetroffen >= 0;
                     Debug.WriteLine($"{anzahlZeilenBetroffen} ArbeitgeberDaten gespeichert!");
                 }
             }
@@ -753,30 +750,34 @@ namespace DeutscheBankKreditrechner.logic
 
                     if (aktKunde != null)
                     {
-                        tblKontaktdaten neueKontaktdaten = new tblKontaktdaten()
+                        tblKontaktdaten neueKontaktdaten = context.tblKontaktdaten.FirstOrDefault(x => x.ID_Kontaktdaten == idKunde);
+
+                        if (neueKontaktdaten == null)
                         {
-                            Strasse = strasse,
-                            Hausnummer = hausNr,
-                            Stiege = stiege,
-                            Etage = etage,
-                            Türnummer = tuer,
-                            email = eMail,
-                            Tel = telNr,
-                            FKOrt = id_PLZ,
-                            ID_Kontaktdaten = idKunde                          
-                        };
+                            neueKontaktdaten = new tblKontaktdaten();
+                            context.tblKontaktdaten.Add(neueKontaktdaten);
 
-                        context.tblKontaktdaten.Add(neueKontaktdaten);
+                        }
+                        neueKontaktdaten.Strasse = strasse;
+                        neueKontaktdaten.Hausnummer = hausNr;
+                        neueKontaktdaten.Stiege = stiege;
+                        neueKontaktdaten.Etage = etage;
+                        neueKontaktdaten.Türnummer = tuer;
+                        neueKontaktdaten.email = eMail;
+                        neueKontaktdaten.Tel = telNr;
+                        neueKontaktdaten.FKOrt = id_PLZ;
+                        neueKontaktdaten.ID_Kontaktdaten = idKunde;
+
+                        int anzahlZeilenBetroffen = context.SaveChanges();
+                        erfolgreich = anzahlZeilenBetroffen >= 0;
+                        Debug.WriteLine($"{anzahlZeilenBetroffen} Kontakt-Daten gespeichert!");
                     }
-
-                    int anzahlZeilenBetroffen = context.SaveChanges();
-                    erfolgreich = anzahlZeilenBetroffen >= 1;
-                    Debug.WriteLine($"{anzahlZeilenBetroffen} Kontakt-Daten gespeichert!");
+                    
                 }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Fehler in KontoInformationenSpeichern");
+                Debug.WriteLine("Fehler in KontaktdatenSpeichern");
                 Debug.Indent();
                 Debug.WriteLine(ex.Message);
                 Debug.Unindent();
@@ -785,6 +786,36 @@ namespace DeutscheBankKreditrechner.logic
 
             Debug.Unindent();
             return erfolgreich;
+        }
+
+        public static tblKontaktdaten KontaktdatenLaden(int id)
+        {
+            Debug.WriteLine("KonsumKreditVerwaltung - KontaktdatenLaden");
+            Debug.Indent();
+
+            tblKontaktdaten kontaktDaten = null;
+
+            try
+            {
+                using (var context = new dbLapProjektEntities())
+                {
+                    kontaktDaten = context.tblKontaktdaten.FirstOrDefault(x => x.ID_Kontaktdaten == id);
+                    Debug.WriteLine("Kontaktdaten geladen!");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Fehler in FinanzielleSituationLaden");
+                Debug.Indent();
+                Debug.WriteLine(ex.Message);
+                Debug.Unindent();
+                Debugger.Break();
+            }
+
+            Debug.Unindent();
+            return kontaktDaten;
+
+
         }
 
         public static bool KontoinformationenSpeichern(string bankName, string iban, string bic, bool neuesKonto, int idKunde)
@@ -819,7 +850,7 @@ namespace DeutscheBankKreditrechner.logic
                             kontoDaten.ID_KontoDaten = idKunde;
                         
                         int anzahlZeilenBetroffen = context.SaveChanges();
-                        erfolgreich = anzahlZeilenBetroffen >= 1;
+                        erfolgreich = anzahlZeilenBetroffen >= 0;
                         
                         Debug.WriteLine($"{anzahlZeilenBetroffen} Konto-Daten gespeichert!");
                     }
