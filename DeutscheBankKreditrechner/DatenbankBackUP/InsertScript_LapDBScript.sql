@@ -24,7 +24,7 @@ go
 
  -- tblBeschaeftigungsart input
  insert into tblBeschaeftigungsArt
- values ('Angestellter'),('Arbeiter'),('Pensionist'),('Selbstständig'),('Arbeitslos');
+ values ('Angestellter'),('Arbeiter'),('Pensionist'),('Selbstständig');
  go
 
  -- tblbranchen input
