@@ -1,10 +1,7 @@
 ﻿@model DeutscheBankKreditrechner.web.Models.KontaktDatenModel
 
-@{
-    ViewBag.Title = "KontaktDaten";
-}
+<h1 align="center">Kontaktdaten</h1>
 <div id="content" style="margin-top: 20px">
-<h2>KontaktDaten</h2>
 
 @using (Html.BeginForm()) 
 {
@@ -24,7 +21,7 @@
                     @Html.LabelFor(model => model.Strasse, htmlAttributes: new { @class = "control-label" })
                 </div>
                 <div class="col-lg-6 col-md-6">
-                    @Html.EditorFor(model => model.Strasse, new { htmlAttributes = new { @class = "form-control", placeholder = "Julius-Fickergasse" } })
+                    @Html.EditorFor(model => model.Strasse, new { htmlAttributes = new { @class = "form-control", placeholder = "Mustergasse" , maxlength = "20" } })
                     @Html.ValidationMessageFor(model => model.Strasse, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -40,7 +37,7 @@
                     @Html.LabelFor(model => model.Hausnummer, htmlAttributes: new { @class = "control-label" })
                 </div>
                 <div class="col-lg-6 col-md-6">
-                    @Html.EditorFor(model => model.Hausnummer, new { htmlAttributes = new { @class = "form-control", placeholder = "1" } })
+                    @Html.EditorFor(model => model.Hausnummer, new { htmlAttributes = new { @class = "form-control", placeholder = "1" , maxlength = "20"} })
                     @Html.ValidationMessageFor(model => model.Hausnummer, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -56,7 +53,7 @@
                     @Html.LabelFor(model => model.Stiege, htmlAttributes: new { @class = "control-label" })
                 </div>
                 <div class="col-lg-6 col-md-6">
-                    @Html.EditorFor(model => model.Stiege, new { htmlAttributes = new { @class = "form-control", placeholder = "2" } })
+                    @Html.EditorFor(model => model.Stiege, new { htmlAttributes = new { @class = "form-control", placeholder = "2", maxlength = "20" } })
                     @Html.ValidationMessageFor(model => model.Stiege, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -72,7 +69,7 @@
                     @Html.LabelFor(model => model.Etage, htmlAttributes: new { @class = "control-label" })
                 </div>
                 <div class="col-lg-6 col-md-6">
-                    @Html.EditorFor(model => model.Etage, new { htmlAttributes = new { @class = "form-control", placeholder = "1" } })
+                    @Html.EditorFor(model => model.Etage, new { htmlAttributes = new { @class = "form-control", placeholder = "1" , maxlength = "20"} })
                     @Html.ValidationMessageFor(model => model.Etage, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -88,7 +85,7 @@
                     @Html.LabelFor(model => model.Tuer, htmlAttributes: new { @class = "control-label" })
                 </div>
                 <div class="col-lg-6 col-md-6">
-                    @Html.EditorFor(model => model.Tuer, new { htmlAttributes = new { @class = "form-control", placeholder = "2" } })
+                    @Html.EditorFor(model => model.Tuer, new { htmlAttributes = new { @class = "form-control", placeholder = "2", maxlength = "20" } })
                     @Html.ValidationMessageFor(model => model.Tuer, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -120,7 +117,7 @@
                     @Html.LabelFor(model => model.Mail, htmlAttributes: new { @class = "control-label" })
                 </div>
                 <div class="col-lg-6 col-md-6">
-                    @Html.EditorFor(model => model.Mail, new { htmlAttributes = new { @class = "form-control", placeholder = "beispiel@deutschebank.de" } })
+                    @Html.EditorFor(model => model.Mail, new { htmlAttributes = new { @class = "form-control", placeholder = "beispiel@deutschebank.de", maxlength = "30" } })
                     @Html.ValidationMessageFor(model => model.Mail, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -136,7 +133,7 @@
                     @Html.LabelFor(model => model.TelefonNummer, htmlAttributes: new { @class = "control-label" })
                 </div>
                 <div class="col-lg-6 col-md-6">
-                    @Html.EditorFor(model => model.TelefonNummer, new { htmlAttributes = new { @class = "form-control", placeholder = "+496601330134" } })
+                    @Html.EditorFor(model => model.TelefonNummer, new { htmlAttributes = new { @class = "form-control", placeholder = "+496601330134" , maxlength = "20"} })
                     @Html.ValidationMessageFor(model => model.TelefonNummer, "", new { @class = "text-danger" })
                 </div>
             </div>

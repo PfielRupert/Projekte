@@ -8,6 +8,7 @@ using DeutscheBankKreditrechner.web.Models;
 using DeutscheBankKreditrechner.logic;
 using System.Globalization;
 using DeutescheBankKreditrechner.freigabe;
+using DeutscheBankKreditrechner.web.Controllers;
 
 namespace DeutscheBankKreditrechner.Controllers
 {
@@ -53,7 +54,14 @@ namespace DeutscheBankKreditrechner.Controllers
                     {
                         Response.Cookies.Add(new HttpCookie("idKunde", neuerKunde.ID_PersoenlicheDaten.ToString()));
                         /// gehe zum nächsten Schritt
-                        return RedirectToAction("FinanzielleSituation");
+                        if (!HomeController.alleDatenAngeben)
+                        {
+                            return RedirectToAction("FinanzielleSituation");
+                        }
+                        else
+                        {
+                            return RedirectToAction("Zusammenfassung");
+                        }
                     }
                 }
                 else
@@ -62,7 +70,14 @@ namespace DeutscheBankKreditrechner.Controllers
                     if (KonsumKReditVerwaltung.KreditRahmenSpeichern(model.GewünschterBetrag, model.Laufzeit, idKunde))
                     {
                         /// gehe zum nächsten Schritt
-                        return RedirectToAction("FinanzielleSituation");
+                        if (!HomeController.alleDatenAngeben)
+                        {
+                            return RedirectToAction("FinanzielleSituation");
+                        }
+                        else
+                        {
+                            return RedirectToAction("Zusammenfassung");
+                        }
                     }
                 }
             }
@@ -111,7 +126,15 @@ namespace DeutscheBankKreditrechner.Controllers
                                                 model.UnterhaltsZahlungen,
                                                 model.ID_Kunde))
                 {
-                    return RedirectToAction("PersönlicheDaten");
+
+                    if (!HomeController.alleDatenAngeben)
+                    {
+                        return RedirectToAction("PersönlicheDaten");
+                    }
+                    else
+                    {
+                        return RedirectToAction("Zusammenfassung");
+                    }
                 }
             }
 
@@ -201,7 +224,7 @@ namespace DeutscheBankKreditrechner.Controllers
                 model.Vorname = kunde.Vorname;
                 model.Nachname = kunde.Nachname;
                 model.ID_Titel = kunde.FKTitel.HasValue ? kunde.FKTitel.Value : 0;
-                model.GeburtsDatum = DateTime.Now;
+                model.GeburtsDatum = kunde.GeburtsDatum.Value.ToShortDateString();
                 model.ID_Staatsbuergerschaft = kunde.FKStaatsbuegerschaft;
                 model.ID_Familienstand = kunde.FKFamilienstand.HasValue ? kunde.FKFamilienstand.Value : 0;
                 model.ID_Wohnart = kunde.FKWohnart.HasValue ? kunde.FKWohnart.Value : 0;
@@ -209,6 +232,8 @@ namespace DeutscheBankKreditrechner.Controllers
                 model.ID_Identifikationsart = kunde.FkIdentifikationsArt.HasValue ? kunde.FkIdentifikationsArt.Value : 0;
                 model.IdentifikationsNummer = kunde.Identifikationsnummer;
             }
+            
+
             return View(model);
         }
 
@@ -235,10 +260,100 @@ namespace DeutscheBankKreditrechner.Controllers
                                                 model.ID_Wohnart,
                                                 model.ID_Kunde))
                 {
-                    return RedirectToAction("KontaktDaten");
+                    if (!HomeController.alleDatenAngeben)
+                    {
+                        return RedirectToAction("KontaktDaten");
+                    }
+                    else
+                    {
+                        return RedirectToAction("Zusammenfassung");
+                    }
                 }
             }
-            return View();
+            #region Listen Nachladen
+            // Titel Nachladen
+            if (model.AlleTitelAngaben == null)
+            {
+                model.AlleTitelAngaben = new List<TitelModel>();
+                foreach (var titel in KonsumKReditVerwaltung.TitelLaden())
+                {
+                    model.AlleTitelAngaben.Add(new TitelModel()
+                    {
+                        ID = titel.ID_Titel.ToString(),
+                        Bezeichnung = titel.Titel
+                    });
+                }
+            }
+            // Abschluss Nachladen
+            if (model.AlleBildungAngaben == null)
+            {
+                model.AlleBildungAngaben = new List<BildungsModel>();
+                foreach (var titel in KonsumKReditVerwaltung.BildungsAngabenLaden())
+                {
+                    model.AlleBildungAngaben.Add(new BildungsModel()
+                    {
+                        ID = titel.ID_Abschluss.ToString(),
+                        Bezeichnung = titel.Abschluss
+                    });
+                }
+            }
+            // Familienstand nachladen
+            if (model.AlleFamilienStandAngaben == null)
+            {
+                model.AlleFamilienStandAngaben = new List<FamilienStandModel>();
+                foreach (var titel in KonsumKReditVerwaltung.FamilienStandAngabenLaden())
+                {
+                    model.AlleFamilienStandAngaben.Add(new FamilienStandModel()
+                    {
+                        ID = titel.ID_Familienstand.ToString(),
+                        Bezeichnung = titel.Familienstand
+                    });
+                }
+            }
+
+            // Identifikation nachladen
+            if (model.AlleIdentifikationsAngaben == null)
+            {
+                model.AlleIdentifikationsAngaben = new List<IdentifikationsModel>();
+                foreach (var titel in KonsumKReditVerwaltung.IdentifikiationsAngabenLaden())
+                {
+                    model.AlleIdentifikationsAngaben.Add(new IdentifikationsModel()
+                    {
+                        ID = titel.ID_IdentitifaktionsArt.ToString(),
+                        Bezeichnung = titel.IdentitfikationsArt
+                    });
+                }
+            }
+            // Staatsbuergerschaften nachladen
+            if (model.AlleStaatsbuergerschaftsAngaben == null)
+            {
+                model.AlleStaatsbuergerschaftsAngaben = new List<StaatsbuergerschaftsModel>();
+                foreach (var titel in KonsumKReditVerwaltung.LaenderLaden())
+                {
+                    model.AlleStaatsbuergerschaftsAngaben.Add(new StaatsbuergerschaftsModel()
+                    {
+                        ID = titel.ID_Land.ToString(),
+                        Bezeichnung = titel.Land
+                    });
+                }
+            }
+
+            // Wohnarten nachladen
+            if (model.AlleWohnartAngaben == null)
+            {
+                model.AlleWohnartAngaben = new List<WohnartModel>();
+                foreach (var titel in KonsumKReditVerwaltung.WohnartenLaden())
+                {
+                    model.AlleWohnartAngaben.Add(new WohnartModel()
+                    {
+                        ID = titel.ID_Wohnart.ToString(),
+                        Bezeichnung = titel.Wohnart
+                    });
+                }
+            }
+            #endregion
+
+            return View(model);
         }
 
         [HttpGet]
@@ -276,7 +391,7 @@ namespace DeutscheBankKreditrechner.Controllers
             tblArbeitgeber arbeitgeberDaten = KonsumKReditVerwaltung.ArbeitgeberAngabenLaden(model.ID_Kunde);
             if (arbeitgeberDaten != null)
             {
-                model.BeschäftigtSeit = arbeitgeberDaten.BeschaeftigtSeit.ToShortDateString();
+                model.BeschäftigtSeit = arbeitgeberDaten.BeschaeftigtSeit.ToString("MM.yyyy");
                 model.FirmenName = arbeitgeberDaten.Firma;
                 model.ID_BeschäftigungsArt = arbeitgeberDaten.FKBeschaeftigungsArt; ;
                 model.ID_Branche = arbeitgeberDaten.FKBranche;
@@ -300,10 +415,47 @@ namespace DeutscheBankKreditrechner.Controllers
                                                 model.BeschäftigtSeit,
                                                 model.ID_Kunde))
                 {
-                    return RedirectToAction("KontoInformationen");
+                    if (!HomeController.alleDatenAngeben)
+                    {
+                        return RedirectToAction("Kontoinformationen");
+                    }
+                    else {
+                        return RedirectToAction("Zusammenfassung");
+                    }
                 }
             }
-            return View();
+            #region Listen nachladen
+            // Beschaeftigungsafrten nachladen
+            if (model.AlleBeschaeftigungen == null)
+            {
+                model.AlleBeschaeftigungen = new List<BeschaeftigungsArtModel>();
+                foreach (var titel in KonsumKReditVerwaltung.BeschaeftigungsArtenLaden())
+                {
+                    model.AlleBeschaeftigungen.Add(new BeschaeftigungsArtModel()
+                    {
+                        ID = titel.ID_BeschaeftigungsArt.ToString(),
+                        Bezeichnung = titel.Beschaeftigungsart
+                    });
+                }
+            }
+
+            // Branchen nachladen
+            if (model.AlleBranchen == null)
+            {
+                model.AlleBranchen = new List<BrancheModel>();
+                foreach (var titel in KonsumKReditVerwaltung.BranchenLaden())
+                {
+                    model.AlleBranchen.Add(new BrancheModel()
+                    {
+                        ID = titel.ID_Branche.ToString(),
+                        Bezeichnung = titel.Branche
+                    });
+                }
+            }
+
+            #endregion
+
+            return View(model);
         }
 
         [HttpGet]
@@ -322,6 +474,7 @@ namespace DeutscheBankKreditrechner.Controllers
                 model.BIC = daten.BIC;
                 model.IBAN = daten.IBAN;
                 model.NeuesKonto = daten.NeuesKonto.Value;
+               
             }
             return View(model);
         }
@@ -340,7 +493,8 @@ namespace DeutscheBankKreditrechner.Controllers
                                                 model.IBAN,
                                                 model.BIC,
                                                 model.NeuesKonto,
-                                                model.ID_Kunde))
+                                                model.ID_Kunde
+                                               ))
                 {
                     return RedirectToAction("Zusammenfassung");
                 }
@@ -408,7 +562,15 @@ namespace DeutscheBankKreditrechner.Controllers
                                                 model.ID_PLZ,
                                                 model.ID_Kunde))
                 {
-                    return RedirectToAction("Arbeitgeber");
+                    if (!HomeController.alleDatenAngeben)
+                    {
+                        return RedirectToAction("Arbeitgeber");
+                    }
+                    else
+                    {
+                        return RedirectToAction("Zusammenfassung");
+                    }
+                    
                 }
             }
 
@@ -419,6 +581,8 @@ namespace DeutscheBankKreditrechner.Controllers
         public ActionResult Zusammenfassung()
         {
             Debug.WriteLine("GET - KonsumKredit - Zusammenfassung");
+
+            HomeController.alleDatenAngeben = true;
 
             /// ermittle für diese Kunden_ID
             /// alle gespeicherten Daten (ACHTUNG! das sind viele ....)
@@ -444,7 +608,8 @@ namespace DeutscheBankKreditrechner.Controllers
             model.Vorname = aktKunde.Vorname;
             model.Nachname = aktKunde.Nachname;
             model.Titel = aktKunde.tblTitel?.Titel;
-            model.GeburtsDatum = DateTime.Now;
+            if(aktKunde.GeburtsDatum != null)
+            model.GeburtsDatum = aktKunde.GeburtsDatum.Value.ToShortDateString();
             model.Staatsbuergerschaft = aktKunde.tblLand?.Land;
             if (aktKunde.UHPKinder != null)
             {
@@ -463,8 +628,7 @@ namespace DeutscheBankKreditrechner.Controllers
             model.FirmenName = aktKunde.tblArbeitgeber?.Firma;
             model.BeschäftigungsArt = aktKunde.tblArbeitgeber?.tblBeschaeftigungsArt?.Beschaeftigungsart;
             model.Branche = aktKunde.tblArbeitgeber?.tblBranche?.Branche;
-            model.BeschäftigtSeit = aktKunde.tblArbeitgeber?.BeschaeftigtSeit.ToString("MM/yyyy",
-                            CultureInfo.InvariantCulture);
+            model.BeschäftigtSeit = aktKunde.tblArbeitgeber?.BeschaeftigtSeit.ToString("MM.yyyy");
 
             model.Strasse = aktKunde.tblKontaktdaten?.Strasse;
             model.Hausnummer = aktKunde.tblKontaktdaten?.Hausnummer;
@@ -480,6 +644,7 @@ namespace DeutscheBankKreditrechner.Controllers
             model.BankName = aktKunde.tblKontoDaten?.BankName;
             model.IBAN = aktKunde.tblKontoDaten?.IBAN;
             model.BIC = aktKunde.tblKontoDaten?.BIC;
+           
 
             /// gib model an die View
             return View(model);

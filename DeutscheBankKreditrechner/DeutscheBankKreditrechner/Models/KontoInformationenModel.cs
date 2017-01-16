@@ -17,7 +17,7 @@ namespace DeutscheBankKreditrechner.web.Models
         [StringLength(20, ErrorMessage = "max. 20 Zeichen erlaubt")]
         public string IBAN { get; set; }
 
-        [StringLength(20, ErrorMessage = "max. 20 Zeichen erlaubt")]
+        [StringLength(8, ErrorMessage = "max. 8 Zeichen erlaubt")]
         public string BIC { get; set; }
     }
 }

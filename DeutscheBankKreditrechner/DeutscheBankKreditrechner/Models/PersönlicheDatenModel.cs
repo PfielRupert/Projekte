@@ -29,9 +29,34 @@ namespace DeutscheBankKreditrechner.web.Models
 
         [Display(Name = "Titel")]
         public int? ID_Titel { get; set; }
-               
+
+        [Required(ErrorMessage = "Bitte Geburtsdatum wählen.")]
+        [ValidBirthDate]
         [DataType(DataType.Date)]
-        public DateTime GeburtsDatum { get; set; }
+        [Display(Name = "Geburtsdatum")]
+        [DisplayFormat(DataFormatString = "{0:yyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public string GeburtsDatum { get; set; }
+
+        [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
+        public sealed class ValidBirthDate : ValidationAttribute
+        {
+            protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+            {
+                DateTime gebDat = Convert.ToDateTime(value);
+                DateTime aktDatum = DateTime.Now;
+                int alter = 0;
+
+                if (aktDatum.Month <= gebDat.Month && aktDatum.Day < gebDat.Day)
+                    alter = aktDatum.Year - gebDat.Year - 1;
+                else
+                    alter = aktDatum.Year - gebDat.Year;
+
+                if (alter >= 18)
+                    return ValidationResult.Success;
+                else
+                    return new ValidationResult("Mindestalter 18 Jahre");
+            }
+        }
 
         [Required]
         [Display(Name = "Staatsbürgerschaft")]
@@ -55,7 +80,7 @@ namespace DeutscheBankKreditrechner.web.Models
         [Required]
         [Display(Name = "Identifikationstyp")]
         public int ID_Identifikationsart { get; set; }
-
+        [Required]
         [StringLength(20, ErrorMessage = "max. 20 Zeichen erlaubt")]
         [Display(Name = "Identifikations-Nummer")]
         public string IdentifikationsNummer { get; set; }

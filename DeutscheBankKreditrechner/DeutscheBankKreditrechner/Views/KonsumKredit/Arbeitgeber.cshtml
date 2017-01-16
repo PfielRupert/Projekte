@@ -1,11 +1,8 @@
 ﻿@model DeutscheBankKreditrechner.web.Models.ArbeitgeberModel
 
-@{
-    ViewBag.Title = "Arbeitgeber";
-}
+<h1 align="center">Arbeitgeber</h1>
 
 <div id="content" style="margin-top: 20px">
-    <h2>Arbeitgeber Informationen</h2>
 
     @using (Html.BeginForm())
     {
@@ -16,8 +13,7 @@
             <div class="row" style="margin-top: 20px">
                 <div class="col-lg-offset-4 col-md-offset-4 col-lg-6 col-md-6">
                     Bitte tragen Sie in die unten stehenden Eingabefelder die Daten zu Ihrem aktuellen Arbeitgeber ein.
-                    <br /><br />
-                    lorem ipsum et dolorem lorem ipsum et dolorem lorem ipsum et dolorem lorem ipsum et dolorem lorem ipsum et dolorem lorem ipsum et dolorem
+                    
                 </div>
             </div>
             <hr />
@@ -27,7 +23,7 @@
                     @Html.LabelFor(model => model.FirmenName, htmlAttributes: new { @class = "control-label" })
                 </div>
                 <div class="col-lg-6 col-md-6">
-                    @Html.TextBoxFor(model => model.FirmenName, new { @class = "form-control" })
+                    @Html.TextBoxFor(model => model.FirmenName, new { @class = "form-control", maxlength = "30"})
                     @Html.ValidationMessageFor(model => model.FirmenName, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -60,11 +56,12 @@
                          data-datepickermaxdate="now"
                          data-datepickerformat="MM.YYYY"
                          id="datePicker1">
-                        @Html.TextBoxFor(model => model.BeschäftigtSeit, new { @class = "form-control", placeholder = "mm.jjjj", id = "beschaeftigtSeit" })
+                        @Html.TextBoxFor(model => model.BeschäftigtSeit, new { @class = "form-control", placeholder = "mm.jjjj", id = "beschäftigtSeit" })
                         <span class="input-group-addon">
                             <span class="glyphicon glyphicon-calendar"></span>
                         </span>
                     </div>
+                    @Html.ValidationMessageFor(model => model.BeschäftigtSeit, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="row">

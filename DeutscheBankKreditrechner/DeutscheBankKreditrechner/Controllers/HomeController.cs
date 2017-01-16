@@ -8,8 +8,10 @@ namespace DeutscheBankKreditrechner.web.Controllers
 {
     public class HomeController : Controller
     {
+        public static bool alleDatenAngeben = false;
         public ActionResult Index()
         {
+            alleDatenAngeben = false;
             return View();
         }
     }

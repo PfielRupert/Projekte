@@ -21,11 +21,34 @@ namespace DeutscheBankKreditrechner.web.Models
         [Display(Name = "Branche")]
         public int ID_Branche { get; set; }
 
+        //[DataType(DataType.DateTime)]
+        //[DisplayFormat(ApplyFormatInEditMode = true, ConvertEmptyStringToNull = true, DataFormatString = "MM.yyyy")]
+        //[Display(Name = "beschäftigt seit")]
+        //[Required(AllowEmptyStrings = false, ErrorMessage = "Pflichtfeld")]
+        //public string BeschäftigtSeit { get; set; }
+
+        [Required(ErrorMessage = "Bitte Geburtsdatum wählen.")]
+        [ValidWorkDate]
         [DataType(DataType.Date)]
-        [DisplayFormat(ApplyFormatInEditMode = true, ConvertEmptyStringToNull = true, DataFormatString = "MM.yyyy")]
         [Display(Name = "beschäftigt seit")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Pflichtfeld")]
+        [DisplayFormat(DataFormatString = "{0:yyy-MM-dd}", ApplyFormatInEditMode = true)]
         public string BeschäftigtSeit { get; set; }
+
+        [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
+        public sealed class ValidWorkDate : ValidationAttribute
+        {
+            protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+            {
+                DateTime gebDat = Convert.ToDateTime(value);
+                DateTime aktDatum = DateTime.Now;
+
+
+                if (gebDat <= aktDatum)
+                    return ValidationResult.Success;
+                else
+                    return new ValidationResult("Das gewählte Datum muss kleiner als das heutige Datum sein!");
+            }
+        }
 
         public List<BeschaeftigungsArtModel> AlleBeschaeftigungen { get; set; }
         public List<BrancheModel> AlleBranchen { get; set; }

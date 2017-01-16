@@ -593,7 +593,7 @@ namespace DeutscheBankKreditrechner.logic
         /// <param name="idWohnart">die Wohnart des Kunden</param>
         /// <param name="idKunde">die ID des Kunden</param>
         /// <returns>true wenn das Anpassen der Werte erfolgreich war, ansonsten false</returns>
-        public static bool PersönlicheDatenSpeichern(int? idTitel, int geschlecht, DateTime geburtsDatum, string vorname, string nachname, int idBildung, int idFamilienstand, int idIdentifikationsart, string identifikationsNummer, string idStaatsbuergerschaft, int idWohnart, int idKunde)
+        public static bool PersönlicheDatenSpeichern(int? idTitel, int geschlecht, string geburtsDatum, string vorname, string nachname, int idBildung, int idFamilienstand, int idIdentifikationsart, string identifikationsNummer, string idStaatsbuergerschaft, int idWohnart, int idKunde)
         {
             Debug.WriteLine("KonsumKreditVerwaltung - PersönlicheDatenSpeichern");
             Debug.Indent();
@@ -620,6 +620,9 @@ namespace DeutscheBankKreditrechner.logic
                         aktKunde.Identifikationsnummer = identifikationsNummer;
                         aktKunde.FKGeschlecht = geschlecht;
                         aktKunde.FKWohnart = idWohnart;
+                        if(geburtsDatum != null)
+                        aktKunde.GeburtsDatum = DateTime.Parse(geburtsDatum);
+                        
                     }
 
                     int anzahlZeilenBetroffen = context.SaveChanges();
@@ -818,7 +821,8 @@ namespace DeutscheBankKreditrechner.logic
 
         }
 
-        public static bool KontoinformationenSpeichern(string bankName, string iban, string bic, bool neuesKonto, int idKunde)
+        public static bool KontoinformationenSpeichern(string bankName, string iban, string bic, bool neuesKonto, int idKunde
+            )
         {
             Debug.WriteLine("KonsumKreditVerwaltung - KontoInformationenSpeichern");
             Debug.Indent();
@@ -848,6 +852,7 @@ namespace DeutscheBankKreditrechner.logic
                             kontoDaten.BIC = bic;
                             kontoDaten.NeuesKonto = neuesKonto;
                             kontoDaten.ID_KontoDaten = idKunde;
+                                                    
                         
                         int anzahlZeilenBetroffen = context.SaveChanges();
                         erfolgreich = anzahlZeilenBetroffen >= 0;
@@ -914,5 +919,57 @@ namespace DeutscheBankKreditrechner.logic
             Debug.Unindent();
             return aktuellerKunde;
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static List<tblPersoenlicheDaten> KundenLaden()
+        {
+            Debug.WriteLine("KonsumKreditVerwaltung - KundeLaden");
+            Debug.Indent();
+
+            List<tblPersoenlicheDaten> aktuellerKunde = null;
+
+            try
+            {
+                using (var context = new dbLapProjektEntities())
+                {
+                    aktuellerKunde = context.tblPersoenlicheDaten
+                        .Include("tblArbeitgeber")
+                        .Include("tblArbeitgeber.tblBeschaeftigungsArt")
+                        .Include("tblArbeitgeber.tblBranche")
+                        .Include("tblFamilienstand")
+                        .Include("tblFinanzielleSituation")
+                        .Include("tblIdentifikationsArt")
+                        .Include("tblKontaktdaten")
+                        .Include("tblKontoDaten")
+                        .Include("tblKreditdaten")
+                        .Include("tblAbschluss")
+                        .Include("tblTitel")
+                        .Include("tblWohnart")
+                        .Include("tblLand")
+                        .Include("tblKontaktdaten.tblOrt")
+                        .Include("tblGeschlecht")
+                        .Where(x=> x.tblKontoDaten != null)
+                        .OrderBy(x => x.tblKreditdaten.GesamtBetrag)
+                        .ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Fehler in KundeLaden");
+                Debug.Indent();
+                Debug.WriteLine(ex.Message);
+                Debug.Unindent();
+                Debugger.Break();
+            }
+
+            Debug.Unindent();
+            return aktuellerKunde;
+        }
+
+        
+
+
     }
 }

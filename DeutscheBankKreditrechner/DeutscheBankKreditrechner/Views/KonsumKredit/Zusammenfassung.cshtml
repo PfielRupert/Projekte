@@ -1,11 +1,8 @@
 ﻿@model DeutscheBankKreditrechner.web.Models.ZusammenfassungModel
 
-@{
-    ViewBag.Title = "Zusammenfassung";
-}
+<h1 align="center">Zusammenfassung</h1>
 
 <div id="content" style="margin-top: 20px">
-    <h2>Zusammenfassung</h2>
 
     <div class="form-horizontal">
         <div class="row" style="margin-top: 20px">
@@ -13,8 +10,7 @@
                 Sie sehen nun alle von Ihnen erfasste Daten. Bitte kontrollieren Sie diese und wechseln Sie
                 ggf. zurück zu den einzelnen Detail-Seiten. Wenn die Daten korrekt sind, bestätigen Sie
                 dies bitte und wir melden uns umgehend bezüglich Ihres Kreditantrags bei Ihnen
-                <br /><br />
-                lorem ipsum et dolorem lorem ipsum et dolorem lorem ipsum et dolorem lorem ipsum et dolorem lorem ipsum et dolorem lorem ipsum et dolorem
+               
             </div>
         </div>
 
@@ -307,7 +303,7 @@
     </div>
     <div class="row">
         <div class="col-lg-offset-4 col-md-offset-4 col-lg-3 col-md-3">
-            @Html.ActionLink("Ändern", "Kontakt", "KonsumKredit", new { id = Model.ID_Kunde }, new { @class = "btn btn-default" })
+            @Html.ActionLink("Ändern", "KontaktDaten", "KonsumKredit", new { id = Model.ID_Kunde }, new { @class = "btn btn-default" })
         </div>
     </div>
 
@@ -351,6 +347,8 @@
             </div>
         </div>
     }
+   
+
 
     <div class="row">
         <div class="col-lg-offset-4 col-md-offset-4 col-lg-3 col-md-3">
@@ -379,6 +377,14 @@
                 @Html.Hidden("id", Model.ID_Kunde)
 
                 <input class="btn btn-default" type="submit" value="Bestätigen">
+                <br />
+                <br />
+                Hier können sie Ihren Antrag drucken
+                <br />
+                
+        <form>
+        <a class="btn btn-default" href="javascript:window.print()"> Drucken </a
+        </form>
 
             </div>
         </div>

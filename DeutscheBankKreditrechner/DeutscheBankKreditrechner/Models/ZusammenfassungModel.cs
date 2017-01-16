@@ -38,7 +38,7 @@ namespace DeutscheBankKreditrechner.web.Models
 
         public string Titel { get; set; }
 
-        public DateTime GeburtsDatum { get; set; }
+        public string GeburtsDatum { get; set; }
 
         public string Staatsbuergerschaft { get; set; }
 
@@ -62,6 +62,7 @@ namespace DeutscheBankKreditrechner.web.Models
 
         public string Branche { get; set; }
 
+        [Display(Name = "beschäftigt seit")]
         public string BeschäftigtSeit { get; set; }
         #endregion
 
@@ -85,6 +86,8 @@ namespace DeutscheBankKreditrechner.web.Models
         public string IBAN { get; set; }
 
         public string BIC { get; set; }
+
+     
         #endregion
     }
 }
