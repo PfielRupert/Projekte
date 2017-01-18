@@ -304,6 +304,7 @@
     <Content Include="Views\KonsumKredit\KontaktDaten.cshtml" />
     <Content Include="Views\KonsumKredit\Zusammenfassung.cshtml" />
     <Content Include="Views\Freigabe\Index.cshtml" />
+    <Content Include="Views\KonsumKredit\Hinweis.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

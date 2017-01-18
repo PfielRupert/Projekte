@@ -14,6 +14,14 @@ namespace DeutscheBankKreditrechner.Controllers
 {
     public class KonsumKreditController : Controller
     {
+        [HttpGet]
+        public ActionResult Hinweis()
+        {
+            Debug.WriteLine("GET - KonsumKredit - Hiwneis");
+
+            return View();
+        }
+
 
         [HttpGet]
         public ActionResult KreditRahmen()

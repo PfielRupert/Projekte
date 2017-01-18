@@ -31,7 +31,10 @@ namespace DeutscheBankKreditrechner.logic
                     {
                         Vorname = "anonym",
                         Nachname = "anonym",
-                        FKGeschlecht = 1
+                        FKGeschlecht = 1,
+                        ErstellDatum = DateTime.Now,
+                        hatGebührBezahlt = false,
+                        istStorniert = false
                     };
                     context.tblPersoenlicheDaten.Add(neuerKunde);
 

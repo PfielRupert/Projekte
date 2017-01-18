@@ -27,6 +27,9 @@ namespace DeutscheBankKreditrechner.logic
         public Nullable<int> FKAbschluss { get; set; }
         public Nullable<int> FkIdentifikationsArt { get; set; }
         public string Identifikationsnummer { get; set; }
+        public DateTime ErstellDatum { get; set; }
+        public Nullable<bool> hatGebührBezahlt { get; set; }
+        public Nullable<bool> istStorniert { get; set; }
     
         public virtual tblAbschluss tblAbschluss { get; set; }
         public virtual tblArbeitgeber tblArbeitgeber { get; set; }
