@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeutscheBankKreditrechner.l
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeutescheBankKreditrechner.freigabe", "DeutescheBankKreditrechner.freigabe\DeutescheBankKreditrechner.freigabe.csproj", "{CEB66219-B62D-455A-98A1-14B5F3EC8E86}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MailService", "MailService\MailService.csproj", "{B3C516DF-A59B-4F2D-823E-57AACEBA9E77}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{CEB66219-B62D-455A-98A1-14B5F3EC8E86}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CEB66219-B62D-455A-98A1-14B5F3EC8E86}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CEB66219-B62D-455A-98A1-14B5F3EC8E86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3C516DF-A59B-4F2D-823E-57AACEBA9E77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3C516DF-A59B-4F2D-823E-57AACEBA9E77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3C516DF-A59B-4F2D-823E-57AACEBA9E77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3C516DF-A59B-4F2D-823E-57AACEBA9E77}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

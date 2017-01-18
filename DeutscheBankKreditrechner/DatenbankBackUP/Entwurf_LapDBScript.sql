@@ -95,8 +95,13 @@ create table tblPersoenlicheDaten(
 	FKWohnart int references tblWohnart,
 	FKAbschluss int references tblAbschluss,
 	FkIdentifikationsArt int references tblIdentifikationsArt,
-	Identifikationsnummer varchar(50) -- wird möglicherweise noch ueber die UI
-												-- validiert je nach auswahl der Art
+	Identifikationsnummer varchar(50),
+	ErstellDatum varchar(40),
+	hatGebührBezahlt bit,
+	istStorniert bit,
+	hat14TageFristMailBekommen bit,
+	hat21TageFristMailBekommen bit,
+	hatGültigenAntragGestellt bit
 )
 GO
 

@@ -681,7 +681,8 @@ namespace DeutscheBankKreditrechner.Controllers
                                                             (double)aktKunde.tblFinanzielleSituation.WohnkostenMonatlich,
                                                             (double)aktKunde.tblFinanzielleSituation.EinkuenfteAlimente,
                                                             (double)aktKunde.tblFinanzielleSituation.Unterhaltszahlungen,
-                                                            (double)aktKunde.tblFinanzielleSituation.BestehendeRatenVerpflichtungen);
+                                                            (double)aktKunde.tblFinanzielleSituation.BestehendeRatenVerpflichtungen,
+                                                            aktKunde.ID_PersoenlicheDaten);
 
                 /// Rüfe Service/DLL auf und prüfe auf Kreditfreigabe
                 Debug.WriteLine($"Kreditfreigabe {(istFreigegeben ? "" : "nicht")}erteilt!");

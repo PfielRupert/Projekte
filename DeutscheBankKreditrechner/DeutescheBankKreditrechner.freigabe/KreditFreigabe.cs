@@ -29,7 +29,8 @@ namespace DeutescheBankKreditrechner.freigabe
             double wohnKosten,
             double einkuenfteAlimente,
             double ausgabenAlimente,
-            double ratenZahlungen)
+            double ratenZahlungen,
+            int aKundenId)
         {
             Debug.WriteLine("KreditFreigabe - FreigabeErteilt");
             Debug.Indent();
@@ -87,6 +88,10 @@ namespace DeutescheBankKreditrechner.freigabe
                 default:
                     throw new ArgumentException($"Ungültiger Wert für {nameof(familienStand)}!\n\nNur 'ledig', 'verwitwet', 'in Partnerschaft', 'verheiratet' erlaubt.");
                     break;
+            }
+            if(freigabe)
+            {
+                DeutscheBankKreditrechner.logic.KonsumKReditVerwaltung.AntragBewilligt(aKundenId);
             }
 
             Debug.Unindent();

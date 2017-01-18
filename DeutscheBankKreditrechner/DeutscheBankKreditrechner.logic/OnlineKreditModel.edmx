@@ -138,9 +138,12 @@
           <Property Name="FKAbschluss" Type="int" />
           <Property Name="FkIdentifikationsArt" Type="int" />
           <Property Name="Identifikationsnummer" Type="varchar" MaxLength="50" />
-          <Property Name="ErstellDatum" Type="date" />
+          <Property Name="ErstellDatum" Type="varchar" MaxLength="40" />
           <Property Name="hatGebührBezahlt" Type="bit" />
           <Property Name="istStorniert" Type="bit" />
+          <Property Name="hat14TageFristMailBekommen" Type="bit" />
+          <Property Name="hat21TageFristMailBekommen" Type="bit" />
+          <Property Name="hatGültigenAntragGestellt" Type="bit" />
         </EntityType>
         <EntityType Name="tblSettings">
           <Key>
@@ -476,9 +479,12 @@
           <NavigationProperty Name="tblLand" Relationship="OnlineKreditModel.FK__tblPersoe__FKSta__30F848ED" FromRole="tblPersoenlicheDaten" ToRole="tblLand" />
           <NavigationProperty Name="tblTitel" Relationship="OnlineKreditModel.FK__tblPersoe__FKTit__300424B4" FromRole="tblPersoenlicheDaten" ToRole="tblTitel" />
           <NavigationProperty Name="tblWohnart" Relationship="OnlineKreditModel.FK__tblPersoe__FKWoh__32E0915F" FromRole="tblPersoenlicheDaten" ToRole="tblWohnart" />
-          <Property Name="ErstellDatum" Type="DateTime" Precision="0" />
+          <Property Name="ErstellDatum" Type="String" />
           <Property Name="hatGebührBezahlt" Type="Boolean" />
           <Property Name="istStorniert" Type="Boolean" />
+          <Property Name="hat14TageFristMailBekommen" Type="Boolean" />
+          <Property Name="hat21TageFristMailBekommen" Type="Boolean" />
+          <Property Name="hatGültigenAntragGestellt" Type="Boolean" />
         </EntityType>
         <EntityContainer Name="dbLapProjektEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="tblPersoenlicheDaten" EntityType="Self.tblPersoenlicheDaten" />
@@ -926,6 +932,9 @@
           <EntitySetMapping Name="tblPersoenlicheDaten">
             <EntityTypeMapping TypeName="OnlineKreditModel.tblPersoenlicheDaten">
               <MappingFragment StoreEntitySet="tblPersoenlicheDaten">
+                <ScalarProperty Name="hatGültigenAntragGestellt" ColumnName="hatGültigenAntragGestellt" />
+                <ScalarProperty Name="hat21TageFristMailBekommen" ColumnName="hat21TageFristMailBekommen" />
+                <ScalarProperty Name="hat14TageFristMailBekommen" ColumnName="hat14TageFristMailBekommen" />
                 <ScalarProperty Name="istStorniert" ColumnName="istStorniert" />
                 <ScalarProperty Name="hatGebührBezahlt" ColumnName="hatGebührBezahlt" />
                 <ScalarProperty Name="ErstellDatum" ColumnName="ErstellDatum" />

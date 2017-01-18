@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using DeutscheBankKreditrechner.logic;
 
 namespace DeutscheBankKreditrechner.web.Controllers
 {
@@ -11,6 +12,9 @@ namespace DeutscheBankKreditrechner.web.Controllers
         public static bool alleDatenAngeben = false;
         public ActionResult Index()
         {
+            KonsumKReditVerwaltung.FirstMailSenden();
+
+
             alleDatenAngeben = false;
             return View();
         }

@@ -4,11 +4,190 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Net.Mail;
+using DeutscheBankKreditrechner.logic;
+using System.Net;
 
 namespace DeutscheBankKreditrechner.logic
 {
     public class KonsumKReditVerwaltung
     {
+        public static void FirstMailSenden()
+        {
+            using (var context = new dbLapProjektEntities())
+            {
+                bool frist14Tage = false;
+                bool frist21Tage = false;
+                string lAktDatum = DateTime.Now.AddDays(-14.0).ToShortDateString();
+                DateTime AktDatum = DateTime.Parse(lAktDatum);
+
+                //                DateTime Test = new DateTime(2017, 1, 4);
+                
+                //prüfen ob es Antragsteller gibt die in verzug sind (14 Tage)
+                frist14Tage = context.tblPersoenlicheDaten.Any(x => x.ErstellDatum == lAktDatum 
+                && x.hatGebührBezahlt == false 
+                && x.hat14TageFristMailBekommen == false 
+                && x.hatGültigenAntragGestellt == true
+                );
+
+                DateTime Prüfdatum21 = AktDatum.AddDays(-7.0);
+                string Prüfstring = Prüfdatum21.ToShortDateString();
+                // prüfen ob Antragsteller in 21 Tage Verzug sind und storniert wird
+                frist21Tage = context.tblPersoenlicheDaten.Any(x => x.ErstellDatum == Prüfstring && x.hatGebührBezahlt == false && x.hat21TageFristMailBekommen == false && x.hatGültigenAntragGestellt == true);
+
+                if (frist14Tage)
+                {
+                    List<tblPersoenlicheDaten> _KundenListe = new List<tblPersoenlicheDaten>();
+                    _KundenListe = context.tblPersoenlicheDaten.Where(x => x.ErstellDatum == lAktDatum
+                    && x.hat14TageFristMailBekommen == false
+                    && x.hatGebührBezahlt == false
+                    && x.hatGültigenAntragGestellt == true)
+                    .ToList();
+
+                    foreach (var item in _KundenListe)
+                    {
+                        
+
+                        string mailAdresse;
+                        try
+                        {
+                            mailAdresse = context.tblKontaktdaten.FirstOrDefault(x => x.ID_Kontaktdaten == item.ID_PersoenlicheDaten).email;
+                        }
+                        catch (Exception)
+                        {
+                            throw;
+                        }
+                        try
+                        { 
+                            using (SmtpClient smtpClient = new SmtpClient("SRV08.itccn.loc", 25))
+                            { // <-- note the use of localhost
+                                NetworkCredential creds = new NetworkCredential("Rupert.Pfiel@qualifizierung.or.at", "Gilgamosch0088q");
+                                smtpClient.Credentials = creds;
+                                string text = EmailText(item,false);
+                                MailMessage msg = new MailMessage("Rupert.Pfiel@qualifizierung.or.at", mailAdresse.ToString(), "Zahlungserinnerung", text);
+                                
+                                msg.IsBodyHtml = true;
+                                
+                                smtpClient.Send(msg);
+
+                                item.hat14TageFristMailBekommen = true;
+                                context.SaveChanges();
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                        }
+
+                        
+                    }
+
+                }
+
+                if (frist21Tage)
+                {
+
+
+                    List<tblPersoenlicheDaten> _KundenListe = new List<tblPersoenlicheDaten>();
+                    _KundenListe = context.tblPersoenlicheDaten.Where(x => x.ErstellDatum == Prüfstring
+                    && x.hat21TageFristMailBekommen == false
+                    && x.hatGebührBezahlt == false
+                    && x.hatGültigenAntragGestellt == true)
+                    .ToList();
+
+                    foreach (var item in _KundenListe)
+                    {
+
+
+                        string mailAdresse;
+                        try
+                        {
+                            mailAdresse = context.tblKontaktdaten.FirstOrDefault(x => x.ID_Kontaktdaten == item.ID_PersoenlicheDaten).email;
+                        }
+                        catch (Exception)
+                        {
+                            throw;
+                        }
+                        try
+                        {
+                            using (SmtpClient smtpClient = new SmtpClient("SRV08.itccn.loc", 25))
+                            { // <-- note the use of localhost
+                                NetworkCredential creds = new NetworkCredential("Rupert.Pfiel@qualifizierung.or.at", "Gilgamosch0088q");
+                                smtpClient.Credentials = creds;
+                                string text = EmailText(item, true);
+                                MailMessage msg = new MailMessage("Rupert.Pfiel@qualifizierung.or.at", mailAdresse.ToString(), "Stornierung Kreditantrag", text);
+                                msg.IsBodyHtml = true;
+
+                                smtpClient.Send(msg);
+
+                                item.hat21TageFristMailBekommen = true;
+                                item.istStorniert = true;
+                                context.SaveChanges();
+
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                        }
+
+                        
+                    }
+                }
+
+            }
+
+        }
+
+        public static string EmailText(tblPersoenlicheDaten aKunde,bool aWirdStorniert)
+        {
+            string Anrede;
+
+            //Anrede
+            if (aKunde.FKGeschlecht == 1)
+            {
+                Anrede = "Sehr geehrter Herr " + aKunde.Nachname + " " + aKunde.Vorname;
+            }
+            else
+            {
+                Anrede = "Sehr geehrte Frau " + aKunde.Nachname + " " + aKunde.Vorname;
+            }
+            string Text = "";
+            if (!aWirdStorniert)
+            {
+                Text = "<p>Vielen Dank für Ihr Vertrauen in unseren Service.</p><br> <p>Bezüglich Ihres Kreditantrages vom " + aKunde.ErstellDatum.ToString() + " möchten wir Sie hiermit höflichst dazu auffordern die angefallene Bearbeitungsgebühr von 4,65€ zu überweisen.</p>" +
+                "<br><br><p> Sollten Sie diese nicht innerhalb von 7 Tagen überweisen wird Ihr Kreditantrag storniert.</p><br><p>Natürlich stehen Wir Ihnen jederzeit für weitere Informationen zur Verfügung.\n Hochachtungsvoll Ihre Deutsche Bank AG</p>";
+            }
+            else
+            {
+                Text = "<p>Ihr Antrag vom " + aKunde.ErstellDatum.ToString() + " wurde <b>storniert</b>!</p> <p>Natürlich stehen Wir Ihnen jederzeit für weitere Informationen zur Verfügung.<p><br> Hochachtungsvoll Ihre Deutsche Bank AG";
+            }
+            string Endtext = Anrede + Text;
+
+            return Endtext;
+        }
+
+        public static void AntragBewilligt(int aKundenID)
+        {
+            using (var context = new dbLapProjektEntities())
+            {
+                try
+                {
+                    context.tblPersoenlicheDaten.FirstOrDefault(x => x.ID_PersoenlicheDaten == aKundenID).hatGültigenAntragGestellt = true;
+                    context.SaveChanges();
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+
+
+            }
+
+        }
+
+
 
         /// <summary>
         /// Erzeugt einen "leeren" dummy Kunden
@@ -32,9 +211,12 @@ namespace DeutscheBankKreditrechner.logic
                         Vorname = "anonym",
                         Nachname = "anonym",
                         FKGeschlecht = 1,
-                        ErstellDatum = DateTime.Now,
+                        ErstellDatum = DateTime.Now.ToShortDateString(),
                         hatGebührBezahlt = false,
-                        istStorniert = false
+                        istStorniert = false,
+                        hatGültigenAntragGestellt = false,
+                        hat14TageFristMailBekommen = false,
+                        hat21TageFristMailBekommen = false
                     };
                     context.tblPersoenlicheDaten.Add(neuerKunde);
 
